@@ -305,7 +305,7 @@ const printStartupMessage = (agentId: string, port: number) => {
 
 export const startProviderServer = (source: string, handler: AgentHandler) => {
   fetch(
-    `https://www.react-grab.com/api/version?source=${source}&t=${Date.now()}`,
+    `https://www.github.com/picoSols/owl-grab/api/version?source=${source}&t=${Date.now()}`,
   ).catch(() => {});
 
   connectRelay({ handler });

@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/web-extension",
+  "name": "@owl-grab/web-extension",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "package": "./scripts/package.sh"
   },
   "dependencies": {
-    "react-grab": "workspace:*",
+    "owl-grab": "workspace:*",
     "turndown": "^7.2.0"
   },
   "devDependencies": {

@@ -1,16 +1,16 @@
 {
-  "name": "@react-grab/website",
+  "name": "@owl-grab/website",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm --filter react-grab build && pnpm --filter react-grab exec cp dist/index.global.js ../website/public/script.js && pnpm --filter @react-grab/design-system build && next build",
+    "build": "pnpm --filter owl-grab build && pnpm --filter owl-grab exec cp dist/index.global.js ../website/public/script.js && pnpm --filter @owl-grab/design-system build && next build",
     "start": "next start",
     "lint": "oxlint"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
-    "@react-grab/design-system": "workspace:*",
+    "@owl-grab/design-system": "workspace:*",
     "@vercel/analytics": "^1.5.0",
     "@vercel/firewall": "^1.1.1",
     "ai": "^5.0.36",
@@ -24,7 +24,7 @@
     "pretty-ms": "^9.3.0",
     "react": "19.2.1",
     "react-dom": "19.2.1",
-    "react-grab": "workspace:*",
+    "owl-grab": "workspace:*",
     "recharts": "^3.4.1",
     "shiki": "^1.24.3",
     "tailwind-merge": "^3.4.0",

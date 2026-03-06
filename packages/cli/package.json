@@ -1,8 +1,8 @@
 {
-  "name": "@react-grab/cli",
+  "name": "@owl-grab/cli",
   "version": "0.1.25",
   "bin": {
-    "react-grab": "./dist/cli.js"
+    "owl-grab": "./dist/cli.js"
   },
   "files": [
     "dist"

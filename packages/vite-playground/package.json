@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/vite-playground",
+  "name": "@owl-grab/vite-playground",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,12 +8,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-grab/next-playground": "workspace:*",
-    "@react-grab/opencode": "workspace:*",
+    "@owl-grab/next-playground": "workspace:*",
+    "@owl-grab/opencode": "workspace:*",
     "clsx": "^2.1.1",
     "react": "19.1.2",
     "react-dom": "19.1.2",
-    "react-grab": "workspace:*",
+    "owl-grab": "workspace:*",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/next-playground",
+  "name": "@owl-grab/next-playground",
   "version": "0.1.0",
   "private": true,
   "exports": {
@@ -17,7 +17,7 @@
     "next": "15.3.8",
     "react": "19.0.1",
     "react-dom": "19.0.1",
-    "react-grab": "workspace:*",
+    "owl-grab": "workspace:*",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {

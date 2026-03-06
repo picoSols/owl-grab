@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/claude-code",
+  "name": "@owl-grab/claude-code",
   "version": "0.1.25",
   "bin": {
     "react-grab-claude-code": "./dist/cli.cjs"
@@ -34,11 +34,11 @@
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.1.0",
-    "@react-grab/relay": "workspace:*",
-    "react-grab": "workspace:*"
+    "@owl-grab/relay": "workspace:*",
+    "owl-grab": "workspace:*"
   },
   "devDependencies": {
-    "@react-grab/utils": "workspace:*",
+    "@owl-grab/utils": "workspace:*",
     "@types/node": "^22.10.7",
     "tsup": "^8.4.0"
   }

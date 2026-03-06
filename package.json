@@ -6,9 +6,9 @@
   ],
   "type": "module",
   "scripts": {
-    "build": "turbo run build --filter=owl-grab --filter=@react-grab/cli --filter=@react-grab/utils && pnpm --filter grab build",
-    "dev": "turbo dev --filter=owl-grab --filter=@react-grab/cli --filter=@react-grab/utils",
-    "test": "turbo run test --filter=owl-grab --filter=@react-grab/cli",
+    "build": "turbo run build --filter=owl-grab --filter=@owl-grab/cli --filter=@owl-grab/utils && pnpm --filter grab build",
+    "dev": "turbo dev --filter=owl-grab --filter=@owl-grab/cli --filter=@owl-grab/utils",
+    "test": "turbo run test --filter=owl-grab --filter=@owl-grab/cli",
     "typecheck": "pnpm --filter owl-grab typecheck",
     "lint": "pnpm --filter owl-grab lint",
     "lint:fix": "pnpm --filter owl-grab lint:fix",

@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/mcp",
+  "name": "@owl-grab/mcp",
   "version": "0.1.25",
   "bin": {
     "react-grab-mcp": "./dist/cli.cjs"
@@ -30,7 +30,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.25.0",
     "fkill": "^9.0.0",
-    "react-grab": "workspace:*",
+    "owl-grab": "workspace:*",
     "zod": "^3.25.0"
   },
   "devDependencies": {

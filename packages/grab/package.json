@@ -9,18 +9,17 @@
     "react",
     "react-grab"
   ],
-  "homepage": "https://react-grab.com",
+  "homepage": "https://github.com/picoSols/owl-grab#readme",
   "bugs": {
-    "url": "https://github.com/aidenybai/react-grab/issues"
+    "url": "https://github.com/picoSols/owl-grab/issues"
   },
   "license": "MIT",
   "author": {
-    "name": "Aiden Bai",
-    "email": "aiden@million.dev"
+    "name": "picoSols"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aidenybai/react-grab.git"
+    "url": "git+https://github.com/picoSols/owl-grab.git"
   },
   "bin": {
     "grab": "./bin/cli.js"
@@ -71,6 +70,6 @@
     "build": "node scripts/build.js"
   },
   "dependencies": {
-    "@react-grab/cli": "workspace:*"
+    "@owl-grab/cli": "workspace:*"
   }
 }

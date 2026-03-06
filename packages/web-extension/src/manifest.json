@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "React Grab",
+  "name": "OWL Grab",
   "version": "0.0.8",
-  "description": "Select context for coding agents directly from your website. Makes tools like Cursor, Claude Code, Copilot run up to 3× faster",
-  "author": "Aiden Bai",
-  "homepage_url": "https://react-grab.com",
+  "description": "Select context for coding agents directly from your Odoo website",
+  "author": "picoSols",
+  "homepage_url": "https://github.com/picoSols/owl-grab",
   "icons": {
     "16": "assets/icons/icon-16.png",
     "32": "assets/icons/icon-32.png",

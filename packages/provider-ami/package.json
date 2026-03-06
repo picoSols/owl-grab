@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/ami",
+  "name": "@owl-grab/ami",
   "version": "0.1.25",
   "files": [
     "dist"
@@ -20,7 +20,7 @@
     "build": "rm -rf dist && NODE_ENV=production tsup"
   },
   "dependencies": {
-    "react-grab": "workspace:*"
+    "owl-grab": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",

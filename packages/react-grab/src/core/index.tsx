@@ -33,18 +33,6 @@ import {
   resolveSourceFromStack,
   checkIsNextProject,
 } from "./context.js";
-// OWL: source file detection helpers (replaces bippy/source)
-const isSourceFile = (fileName: string): boolean => {
-  if (!fileName) return false;
-  // Accept common Odoo/OWL source patterns
-  return !fileName.includes('node_modules') && !fileName.startsWith('data:');
-};
-const normalizeFileName = (fileName: string): string => {
-  // Strip common prefixes for cleaner display
-  return fileName
-    .replace(/^.*\/addons\//, '')
-    .replace(/^.*\/static\/src\//, '')
-    .replace(/^https?:\/\/[^/]+\//, '');
 import { createNoopApi } from "./noop-api.js";
 import { createEventListenerManager } from "./events.js";
 import { tryCopyWithFallback } from "./copy.js";
@@ -166,6 +154,18 @@ import {
 } from "../utils/history-storage.js";
 import { copyContent } from "../utils/copy-content.js";
 import { joinSnippets } from "../utils/join-snippets.js";
+
+// OWL: source file detection helpers (replaces bippy/source)
+const isSourceFile = (fileName: string): boolean => {
+  if (!fileName) return false;
+  return !fileName.includes('node_modules') && !fileName.startsWith('data:');
+};
+const normalizeFileName = (fileName: string): string => {
+  return fileName
+    .replace(/^.*\/addons\//, '')
+    .replace(/^.*\/static\/src\//, '')
+    .replace(/^https?:\/\/[^/]+\//, '');
+};
 
 const builtInPlugins = [
   copyPlugin,

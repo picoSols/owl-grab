@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/gym",
+  "name": "@owl-grab/gym",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -52,7 +52,7 @@
     "react": "19.0.1",
     "react-day-picker": "^9.11.1",
     "react-dom": "19.0.1",
-    "react-grab": "workspace:*",
+    "owl-grab": "workspace:*",
     "recharts": "2.15.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^2.6.0",

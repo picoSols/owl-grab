@@ -145,8 +145,8 @@ There are several improvements that can be made to this benchmark:
 
 - **Additional metrics**: Consider tracking more granular metrics like time to first tool call, search accuracy, or user satisfaction scores.
 
-Pull requests are welcome! If you'd like to contribute improvements to the benchmark suite, please open an issue or submit a PR on [GitHub](https://github.com/aidenybai/react-grab).
+Pull requests are welcome! If you'd like to contribute improvements to the benchmark suite, please open an issue or submit a PR on [GitHub](https://github.com/picoSols/owl-grab).
 
 ## Results
 
-The latest benchmark results are published on the [React Grab website](https://react-grab.com/blog/intro). The benchmark shows that React Grab makes coding agents approximately **3× faster** on average.
+The latest benchmark results are published on the [OWL Grab repository](https://github.com/picoSols/owl-grab). Based on the original React Grab benchmarks, context selection makes coding agents approximately **3× faster** on average.

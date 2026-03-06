@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/opencode",
+  "name": "@owl-grab/opencode",
   "version": "0.1.25",
   "bin": {
     "react-grab-opencode": "./dist/cli.cjs"
@@ -34,12 +34,12 @@
   },
   "dependencies": {
     "@opencode-ai/sdk": "^1.0.132",
-    "@react-grab/relay": "workspace:*",
+    "@owl-grab/relay": "workspace:*",
     "fkill": "^9.0.0",
-    "react-grab": "workspace:*"
+    "owl-grab": "workspace:*"
   },
   "devDependencies": {
-    "@react-grab/utils": "workspace:*",
+    "@owl-grab/utils": "workspace:*",
     "@types/node": "^22.10.7",
     "tsup": "^8.4.0"
   }

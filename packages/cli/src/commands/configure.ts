@@ -307,7 +307,7 @@ export const configure = new Command()
   .option("--context-lines <lines>", "max context lines to include")
   .option(
     "--cdn <domain>",
-    "CDN domain (e.g., unpkg.com, custom.react-grab.com)",
+    "CDN domain (e.g., unpkg.com)",
   )
   .option(
     "-c, --cwd <cwd>",

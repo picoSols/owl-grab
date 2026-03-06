@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/copilot",
+  "name": "@owl-grab/copilot",
   "version": "0.1.25",
   "bin": {
     "react-grab-copilot": "./dist/cli.cjs"
@@ -33,12 +33,12 @@
     "build": "rm -rf dist && NODE_ENV=production tsup"
   },
   "dependencies": {
-    "@react-grab/relay": "workspace:*",
+    "@owl-grab/relay": "workspace:*",
     "execa": "^9.6.0",
-    "react-grab": "workspace:*"
+    "owl-grab": "workspace:*"
   },
   "devDependencies": {
-    "@react-grab/utils": "workspace:*",
+    "@owl-grab/utils": "workspace:*",
     "@types/node": "^22.10.7",
     "tsup": "^8.4.0"
   }

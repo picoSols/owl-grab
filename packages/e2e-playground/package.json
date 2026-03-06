@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/e2e-playground",
+  "name": "@owl-grab/e2e-playground",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,7 +11,7 @@
     "clsx": "^2.1.1",
     "react": "19.1.2",
     "react-dom": "19.1.2",
-    "react-grab": "workspace:*",
+    "owl-grab": "workspace:*",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {

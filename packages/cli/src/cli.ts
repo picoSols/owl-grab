@@ -5,7 +5,7 @@ import { init } from "./commands/init.js";
 import { remove } from "./commands/remove.js";
 
 const VERSION = process.env.VERSION ?? "0.0.1";
-const VERSION_API_URL = "https://www.react-grab.com/api/version";
+const VERSION_API_URL = "https://www.github.com/picoSols/owl-grab/api/version";
 
 process.on("SIGINT", () => process.exit(0));
 process.on("SIGTERM", () => process.exit(0));

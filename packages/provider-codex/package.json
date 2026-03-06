@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/codex",
+  "name": "@owl-grab/codex",
   "version": "0.1.25",
   "bin": {
     "react-grab-codex": "./dist/cli.cjs"
@@ -34,11 +34,11 @@
   },
   "dependencies": {
     "@openai/codex-sdk": "^0.66.0",
-    "@react-grab/relay": "workspace:*",
-    "react-grab": "workspace:*"
+    "@owl-grab/relay": "workspace:*",
+    "owl-grab": "workspace:*"
   },
   "devDependencies": {
-    "@react-grab/utils": "workspace:*",
+    "@owl-grab/utils": "workspace:*",
     "@types/node": "^22.10.7",
     "tsup": "^8.4.0"
   }

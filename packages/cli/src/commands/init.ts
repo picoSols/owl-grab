@@ -47,8 +47,8 @@ import {
 } from "../utils/transform.js";
 
 const VERSION = process.env.VERSION ?? "0.0.1";
-const REPORT_URL = "https://react-grab.com/api/report-cli";
-const DOCS_URL = "https://github.com/aidenybai/react-grab";
+const REPORT_URL = "https://github.com/picoSols/owl-grab/api/report-cli";
+const DOCS_URL = "https://github.com/picoSols/owl-grab";
 
 interface ReportConfig {
   framework: string;

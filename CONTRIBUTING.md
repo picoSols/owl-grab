@@ -1,6 +1,6 @@
-# Contributing to React Grab
+# Contributing to OWL Grab
 
-Thanks for your interest in contributing to React Grab! This document provides guidelines and instructions for contributing.
+Thanks for your interest in contributing to OWL Grab! This document provides guidelines and instructions for contributing.
 
 ## Getting Started
 
@@ -14,8 +14,8 @@ Thanks for your interest in contributing to React Grab! This document provides g
 1. Fork and clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/react-grab.git
-cd react-grab
+git clone https://github.com/YOUR_USERNAME/owl-grab.git
+cd owl-grab
 ```
 
 2. Install dependencies using [@antfu/ni](https://github.com/antfu/ni):
@@ -40,9 +40,9 @@ nr dev
 
 ```
 packages/
-├── react-grab/          # Core library
+├── react-grab/          # Core library (OWL-adapted)
 ├── grab/                # Bundled package (library + CLI, published as `grab`)
-├── cli/                 # CLI implementation (@react-grab/cli)
+├── cli/                 # CLI implementation (@owl-grab/cli)
 ├── provider-cursor/     # Cursor agent integration
 ├── provider-claude-code/  # Claude Code integration
 ├── provider-opencode/   # OpenCode integration
@@ -50,7 +50,7 @@ packages/
 ├── provider-gemini/     # Google Gemini CLI integration
 ├── provider-amp/        # Amp SDK integration
 ├── provider-ami/        # AMI client
-├── website/             # Documentation site (react-grab.com)
+├── website/             # Documentation site (owl-grab.com)
 ├── vite-playground/     # Vite development playground
 ├── next-playground/     # Next.js development playground
 ├── agent-playground/    # Agent testing playground
@@ -72,22 +72,22 @@ pnpm --filter vite-playground dev
 pnpm --filter next-playground dev
 
 # Agent playground (for testing agent provider integrations)
-pnpm --filter @react-grab/agent-playground dev:claude   # Claude Code
-pnpm --filter @react-grab/agent-playground dev:cursor   # Cursor
-pnpm --filter @react-grab/agent-playground dev:opencode # OpenCode
-pnpm --filter @react-grab/agent-playground dev:codex    # Codex
-pnpm --filter @react-grab/agent-playground dev:gemini   # Gemini
-pnpm --filter @react-grab/agent-playground dev:amp      # Amp
-pnpm --filter @react-grab/agent-playground dev:ami      # Ami
+pnpm --filter @owl-grab/agent-playground dev:claude   # Claude Code
+pnpm --filter @owl-grab/agent-playground dev:cursor   # Cursor
+pnpm --filter @owl-grab/agent-playground dev:opencode # OpenCode
+pnpm --filter @owl-grab/agent-playground dev:codex    # Codex
+pnpm --filter @owl-grab/agent-playground dev:gemini   # Gemini
+pnpm --filter @owl-grab/agent-playground dev:amp      # Amp
+pnpm --filter @owl-grab/agent-playground dev:ami      # Ami
 ```
 
-The agent playground runs at `http://localhost:5174` and lets you test react-grab's agent provider API with multiple backends.
+The agent playground runs at `http://localhost:5174` and lets you test owl-grab's agent provider API with multiple backends.
 
 ### Running Tests
 
 ```bash
 # Run CLI tests
-pnpm --filter @react-grab/cli test
+pnpm --filter @owl-grab/cli test
 ```
 
 ### Linting & Formatting
@@ -153,7 +153,7 @@ Follow the prompts to describe your changes. This helps maintain accurate change
 
 ## Reporting Issues
 
-Found a bug? Have a feature request? [Open an issue](https://github.com/aidenybai/react-grab/issues) with:
+Found a bug? Have a feature request? [Open an issue](https://github.com/picoSols/owl-grab/issues) with:
 
 - Clear description of the problem or request
 - Steps to reproduce (for bugs)
@@ -163,7 +163,7 @@ Found a bug? Have a feature request? [Open an issue](https://github.com/aidenyba
 ## Community
 
 - Join our [Discord](https://discord.com/invite/G7zxfUzkm7) to discuss ideas and get help
-- Check existing [issues](https://github.com/aidenybai/react-grab/issues) before opening new ones
+- Check existing [issues](https://github.com/picoSols/owl-grab/issues) before opening new ones
 
 ## License
 

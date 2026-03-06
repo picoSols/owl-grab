@@ -1,5 +1,5 @@
 {
-  "name": "@react-grab/design-system",
+  "name": "@owl-grab/design-system",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -24,7 +24,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "react-grab": "workspace:*",
+    "owl-grab": "workspace:*",
     "solid-js": "^1.9.10"
   },
   "devDependencies": {

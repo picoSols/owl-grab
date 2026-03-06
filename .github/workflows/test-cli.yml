@@ -31,4 +31,4 @@ jobs:
         run: pnpm build
 
       - name: Run CLI tests
-        run: pnpm --filter @react-grab/cli test
+        run: pnpm --filter @owl-grab/cli test
