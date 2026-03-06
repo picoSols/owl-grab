@@ -1,7 +1,7 @@
 import { VERSION } from "../constants.js";
 
 const LEXICAL_EDITOR_MIME_TYPE = "application/x-lexical-editor";
-const REACT_GRAB_MIME_TYPE = "application/x-react-grab";
+const REACT_GRAB_MIME_TYPE = "application/x-owl-grab";
 
 export interface ReactGrabEntry {
   tagName?: string;

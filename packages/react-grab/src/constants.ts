@@ -88,9 +88,9 @@ export const ARROW_KEYS = new Set([
   "ArrowRight",
 ]);
 
-export const FROZEN_ELEMENT_ATTRIBUTE = "data-react-grab-frozen";
+export const FROZEN_ELEMENT_ATTRIBUTE = "data-owl-grab-frozen";
 
-export const USER_IGNORE_ATTRIBUTE = "data-react-grab-ignore";
+export const USER_IGNORE_ATTRIBUTE = "data-owl-grab-ignore";
 
 export const VIEWPORT_COVERAGE_THRESHOLD = 0.9;
 export const OVERLAY_Z_INDEX_THRESHOLD = 1000;

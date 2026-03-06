@@ -808,7 +808,7 @@ export const OverlayCanvas: Component<OverlayCanvasProps> = (props) => {
   return (
     <canvas
       ref={canvasRef}
-      data-react-grab-overlay-canvas
+      data-owl-grab-overlay-canvas
       style={{
         position: "fixed",
         top: "0",

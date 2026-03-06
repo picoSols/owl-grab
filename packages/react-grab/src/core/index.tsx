@@ -33,7 +33,18 @@ import {
   resolveSourceFromStack,
   checkIsNextProject,
 } from "./context.js";
-import { isSourceFile, normalizeFileName } from "bippy/source";
+// OWL: source file detection helpers (replaces bippy/source)
+const isSourceFile = (fileName: string): boolean => {
+  if (!fileName) return false;
+  // Accept common Odoo/OWL source patterns
+  return !fileName.includes('node_modules') && !fileName.startsWith('data:');
+};
+const normalizeFileName = (fileName: string): string => {
+  // Strip common prefixes for cleaner display
+  return fileName
+    .replace(/^.*\/addons\//, '')
+    .replace(/^.*\/static\/src\//, '')
+    .replace(/^https?:\/\/[^/]+\//, '');
 import { createNoopApi } from "./noop-api.js";
 import { createEventListenerManager } from "./events.js";
 import { tryCopyWithFallback } from "./copy.js";
@@ -616,7 +627,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
       );
 
       window.dispatchEvent(
-        new CustomEvent("react-grab:element-selected", {
+        new CustomEvent("owl-grab:element-selected", {
           detail: {
             elements: elementsPayload,
           },
@@ -1077,7 +1088,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
     createEffect(
       on(isActivated, (activated) => {
         if (!activated) return;
-        if (!pluginRegistry.store.options.freezeReactUpdates) return;
+        if (!pluginRegistry.store.options.freezeOwlUpdates) return;
         const unfreezeUpdates = freezeUpdates();
         onCleanup(unfreezeUpdates);
       }),
@@ -1471,7 +1482,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
       if (cursor) {
         if (!cursorStyleElement) {
           cursorStyleElement = document.createElement("style");
-          cursorStyleElement.setAttribute("data-react-grab-cursor", "");
+          cursorStyleElement.setAttribute("data-owl-grab-cursor", "");
           document.head.appendChild(cursorStyleElement);
         }
         cursorStyleElement.textContent = `* { cursor: ${cursor} !important; }`;
@@ -2560,7 +2571,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
 
         const isFromReactGrabInput = isEventFromOverlay(
           event,
-          "data-react-grab-input",
+          "data-owl-grab-input",
         );
         if (
           isPromptMode() &&
@@ -2611,7 +2622,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
         }
 
         const isFromOverlay =
-          isEventFromOverlay(event, "data-react-grab-ignore-events") &&
+          isEventFromOverlay(event, "data-owl-grab-ignore-events") &&
           !isEnterToActivateInput;
 
         if (isPromptMode() || isFromOverlay) {
@@ -2792,7 +2803,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
         if (!event.isPrimary) return;
         const isTouchPointer = event.pointerType === "touch";
         actions.setTouchMode(isTouchPointer);
-        if (isEventFromOverlay(event, "data-react-grab-ignore-events")) return;
+        if (isEventFromOverlay(event, "data-owl-grab-ignore-events")) return;
         if (store.contextMenuPosition !== null) return;
         if (isTouchPointer && !isHoldingKeys() && !isActivated()) return;
         const isActiveState = isTouchPointer ? isHoldingKeys() : isActivated();
@@ -2811,7 +2822,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
         if (event.button !== 0) return;
         if (!event.isPrimary) return;
         actions.setTouchMode(event.pointerType === "touch");
-        if (isEventFromOverlay(event, "data-react-grab-ignore-events")) return;
+        if (isEventFromOverlay(event, "data-owl-grab-ignore-events")) return;
         if (store.contextMenuPosition !== null) return;
         if (toolbarMenuPosition() !== null) return;
 
@@ -2847,7 +2858,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
       (event: PointerEvent) => {
         if (event.button !== 0) return;
         if (!event.isPrimary) return;
-        if (isEventFromOverlay(event, "data-react-grab-ignore-events")) return;
+        if (isEventFromOverlay(event, "data-owl-grab-ignore-events")) return;
         if (store.contextMenuPosition !== null) return;
         const isActive = isRendererActive() || isCopying() || isDragging();
         const hasModifierKeyHeld = event.metaKey || event.ctrlKey;
@@ -2867,7 +2878,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
 
         const isFromOverlay = isEventFromOverlay(
           event,
-          "data-react-grab-ignore-events",
+          "data-owl-grab-ignore-events",
         );
         if (isFromOverlay && arrowNavigationElements().length > 0) {
           clearArrowNavigation();
@@ -2917,7 +2928,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
     eventListenerManager.addWindowListener(
       "click",
       (event: MouseEvent) => {
-        if (isEventFromOverlay(event, "data-react-grab-ignore-events")) return;
+        if (isEventFromOverlay(event, "data-owl-grab-ignore-events")) return;
         if (store.contextMenuPosition !== null) return;
 
         if (isRendererActive() || isCopying() || didJustDrag()) {
@@ -3089,7 +3100,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
       (event: ClipboardEvent) => {
         if (
           isPromptMode() ||
-          isEventFromOverlay(event, "data-react-grab-ignore-events")
+          isEventFromOverlay(event, "data-owl-grab-ignore-events")
         ) {
           return;
         }
@@ -4331,7 +4342,7 @@ export const init = (rawOptions?: Options): ReactGrabAPI => {
 };
 
 export { getStack, getElementContext as formatElementInfo } from "./context.js";
-export { isInstrumentationActive } from "bippy";
+export { isInstrumentationActive } from "./context.js";
 export { DEFAULT_THEME } from "./theme.js";
 
 export type {

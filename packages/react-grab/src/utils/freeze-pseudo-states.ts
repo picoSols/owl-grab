@@ -166,7 +166,7 @@ export const freezePseudoStates = (): void => {
   applyFrozenStates(focusStates, frozenFocusElements);
 
   pointerEventsStyle = createStyleElement(
-    "data-react-grab-frozen-pseudo",
+    "data-owl-grab-frozen-pseudo",
     POINTER_EVENTS_STYLES,
   );
 };

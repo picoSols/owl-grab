@@ -172,7 +172,7 @@ export const ContextMenu: Component<ContextMenuProps> = (props) => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (
         !isVisible() ||
-        isEventFromOverlay(event, "data-react-grab-ignore-events")
+        isEventFromOverlay(event, "data-owl-grab-ignore-events")
       )
         return;
       if (event instanceof MouseEvent && event.button === 2) return;
@@ -258,8 +258,8 @@ export const ContextMenu: Component<ContextMenuProps> = (props) => {
     <Show when={isVisible()}>
       <div
         ref={containerRef}
-        data-react-grab-ignore-events
-        data-react-grab-context-menu
+        data-owl-grab-ignore-events
+        data-owl-grab-context-menu
         class="fixed font-sans text-[13px] antialiased filter-[drop-shadow(0px_1px_2px_#51515140)] select-none"
         style={{
           top: `${computedPosition().top}px`,
@@ -316,8 +316,8 @@ export const ContextMenu: Component<ContextMenuProps> = (props) => {
               <For each={menuItems()}>
                 {(item) => (
                   <button
-                    data-react-grab-ignore-events
-                    data-react-grab-menu-item={item.label.toLowerCase()}
+                    data-owl-grab-ignore-events
+                    data-owl-grab-menu-item={item.label.toLowerCase()}
                     class="relative z-1 contain-layout flex items-center justify-between w-full px-2 py-1 cursor-pointer text-left border-none bg-transparent disabled:opacity-40 disabled:cursor-default"
                     disabled={!item.enabled}
                     onPointerDown={(event) => event.stopPropagation()}

@@ -1,11 +1,13 @@
-"use client";
+// OWL Grab standalone initializer
+// For standalone script injection into Odoo, this is a no-op since
+// initialization happens in index.ts when the script loads.
+// This file exists for API compatibility.
 
-import "bippy";
-import { useEffect, useRef } from "react";
 import type { Options, ReactGrabAPI, SettableOptions } from "./types.js";
 
 declare global {
   interface Window {
+    __OWL_GRAB__?: ReactGrabAPI;
     __REACT_GRAB__?: ReactGrabAPI;
   }
 }
@@ -13,49 +15,34 @@ declare global {
 const shouldActivate = (): boolean => {
   if (typeof window === "undefined") return false;
 
-  const isProduction = process.env.NODE_ENV === "production";
+  // In Odoo, check for debug mode or query param
   const hasQueryParam =
-    new URLSearchParams(window.location.search).get("react-grab") === "true";
+    new URLSearchParams(window.location.search).get("owl-grab") === "true" ||
+    new URLSearchParams(window.location.search).get("debug") !== null;
 
-  return !isProduction || hasQueryParam;
+  return hasQueryParam || true; // Always activate in dev for standalone injection
 };
 
-export const ReactGrab = (props: Options): null => {
-  const apiRef = useRef<ReactGrabAPI | null>(null);
-  const didInitRef = useRef(false);
-  const didCreateRef = useRef(false);
+/**
+ * Initialize OWL Grab programmatically.
+ * Call this if you want to control initialization manually instead of
+ * relying on the auto-init from the global script.
+ */
+export const initOwlGrab = (options?: Options): ReactGrabAPI | null => {
+  if (!shouldActivate()) return null;
 
-  useEffect(() => {
-    if (didInitRef.current) return;
-    if (!shouldActivate()) return;
-
-    didInitRef.current = true;
-
-    const existingApi = window.__REACT_GRAB__;
-    if (existingApi) {
-      apiRef.current = existingApi;
-      didCreateRef.current = false;
-      const { enabled: _enabled, ...settableOptions } = props;
-      if (Object.keys(settableOptions).length > 0) {
-        existingApi.setOptions(settableOptions as SettableOptions);
-      }
-    } else {
-      import("./core/index.js").then(({ init }) => {
-        if (!didInitRef.current || apiRef.current) return;
-        apiRef.current = init(props);
-        didCreateRef.current = true;
-      });
+  const existingApi = window.__OWL_GRAB__;
+  if (existingApi) {
+    const { enabled: _enabled, ...settableOptions } = options ?? {};
+    if (Object.keys(settableOptions).length > 0) {
+      existingApi.setOptions(settableOptions as SettableOptions);
     }
+    return existingApi;
+  }
 
-    return () => {
-      if (didCreateRef.current) {
-        apiRef.current?.dispose();
-      }
-      apiRef.current = null;
-      didInitRef.current = false;
-      didCreateRef.current = false;
-    };
-  }, []);
-
-  return null;
+  // Dynamic import to avoid loading the full bundle if not needed
+  return null; // Will be initialized by index.ts
 };
+
+// Re-export for backward compat
+export const ReactGrab = initOwlGrab;

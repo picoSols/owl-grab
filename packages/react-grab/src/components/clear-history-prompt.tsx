@@ -129,7 +129,7 @@ export const ClearHistoryPrompt: Component<ClearHistoryPromptProps> = (
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (
         !props.position ||
-        isEventFromOverlay(event, "data-react-grab-ignore-events")
+        isEventFromOverlay(event, "data-owl-grab-ignore-events")
       )
         return;
       props.onCancel();
@@ -164,8 +164,8 @@ export const ClearHistoryPrompt: Component<ClearHistoryPromptProps> = (
     <Show when={shouldMount()}>
       <div
         ref={containerRef}
-        data-react-grab-ignore-events
-        data-react-grab-clear-history-prompt
+        data-owl-grab-ignore-events
+        data-owl-grab-clear-history-prompt
         class="fixed font-sans text-[13px] antialiased filter-[drop-shadow(0px_1px_2px_#51515140)] select-none transition-[opacity,transform] duration-100 ease-out will-change-[opacity,transform]"
         style={{
           top: `${displayPosition().top}px`,

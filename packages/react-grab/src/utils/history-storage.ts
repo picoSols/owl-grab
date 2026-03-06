@@ -4,7 +4,7 @@ import {
 } from "../constants.js";
 import type { HistoryItem } from "../types.js";
 
-const SESSION_STORAGE_KEY = "react-grab-history-items";
+const SESSION_STORAGE_KEY = "owl-grab-history-items";
 
 const loadFromSessionStorage = (): HistoryItem[] => {
   try {

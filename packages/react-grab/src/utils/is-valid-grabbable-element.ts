@@ -8,13 +8,13 @@ import {
 import { isElementVisible } from "./is-element-visible.js";
 import { isRootElement } from "./is-root-element.js";
 
-const isReactGrabElement = (element: Element): boolean => {
-  if (element.hasAttribute("data-react-grab")) return true;
+const isOwlGrabElement = (element: Element): boolean => {
+  if (element.hasAttribute("data-owl-grab")) return true;
 
   const rootNode = element.getRootNode();
   return (
     rootNode instanceof ShadowRoot &&
-    rootNode.host.hasAttribute("data-react-grab")
+    rootNode.host.hasAttribute("data-owl-grab")
   );
 };
 
@@ -22,9 +22,8 @@ const isUserIgnoredElement = (element: Element): boolean =>
   element.hasAttribute(USER_IGNORE_ATTRIBUTE) ||
   element.closest(`[${USER_IGNORE_ATTRIBUTE}]`) !== null;
 
-// HACK: Dev tools like react-scan create full-viewport canvas overlays with
+// HACK: Dev tools may create full-viewport canvas overlays with
 // pointer-events: none that document.elementsFromPoint() still returns.
-// @see https://github.com/aidenybai/react-grab/issues/148
 const isDevToolsOverlay = (computedStyle: CSSStyleDeclaration): boolean => {
   const zIndex = parseInt(computedStyle.zIndex, 10);
   return (
@@ -83,7 +82,7 @@ export const isValidGrabbableElement = (element: Element): boolean => {
     return false;
   }
 
-  if (isReactGrabElement(element)) {
+  if (isOwlGrabElement(element)) {
     return false;
   }
 

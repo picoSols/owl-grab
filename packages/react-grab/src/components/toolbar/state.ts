@@ -3,7 +3,7 @@ import type { ToolbarState } from "../../types.js";
 export type { ToolbarState };
 export type SnapEdge = "top" | "bottom" | "left" | "right";
 
-const STORAGE_KEY = "react-grab-toolbar-state";
+const STORAGE_KEY = "owl-grab-toolbar-state";
 
 export const loadToolbarState = (): ToolbarState | null => {
   try {
@@ -21,7 +21,7 @@ export const loadToolbarState = (): ToolbarState | null => {
     };
   } catch (error) {
     console.warn(
-      "[react-grab] Failed to load toolbar state from localStorage:",
+      "[owl-grab] Failed to load toolbar state from localStorage:",
       error,
     );
   }
@@ -33,7 +33,7 @@ export const saveToolbarState = (state: ToolbarState): void => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch (error) {
     console.warn(
-      "[react-grab] Failed to save toolbar state to localStorage:",
+      "[owl-grab] Failed to save toolbar state to localStorage:",
       error,
     );
   }

@@ -771,13 +771,13 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
       const expandedWrappers = Array.from(expandableButtonsRef.children).filter(
         (child): child is HTMLElement => {
           if (!(child instanceof HTMLElement)) return false;
-          if (child.querySelector("[data-react-grab-toolbar-history]")) {
+          if (child.querySelector("[data-owl-grab-toolbar-history]")) {
             return hasHistoryItems;
           }
-          if (child.querySelector("[data-react-grab-toolbar-copy-all]")) {
+          if (child.querySelector("[data-owl-grab-toolbar-copy-all]")) {
             return Boolean(props.isHistoryDropdownOpen);
           }
-          if (child.querySelector("[data-react-grab-toolbar-menu]")) {
+          if (child.querySelector("[data-owl-grab-toolbar-menu]")) {
             return hasMenuActions;
           }
           return true;
@@ -1468,8 +1468,8 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
   return (
     <div
       ref={containerRef}
-      data-react-grab-ignore-events
-      data-react-grab-toolbar
+      data-owl-grab-ignore-events
+      data-owl-grab-toolbar
       class={cn(
         "fixed left-0 top-0 font-sans text-[13px] antialiased filter-[drop-shadow(0px_1px_2px_#51515140)] select-none",
         getCursorClass(),
@@ -1559,8 +1559,8 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
                 >
                   {/* HACK: Native events with stopImmediatePropagation prevent page-level dropdowns from closing */}
                   <button
-                    data-react-grab-ignore-events
-                    data-react-grab-toolbar-toggle
+                    data-owl-grab-ignore-events
+                    data-owl-grab-toolbar-toggle
                     aria-label={
                       props.isActive
                         ? "Stop selecting element"
@@ -1614,8 +1614,8 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
                 >
                   {/* HACK: Native events with stopImmediatePropagation prevent page-level dropdowns from closing */}
                   <button
-                    data-react-grab-ignore-events
-                    data-react-grab-toolbar-history
+                    data-owl-grab-ignore-events
+                    data-owl-grab-toolbar-history
                     aria-label={`Open history${
                       (props.historyItemCount ?? 0) > 0
                         ? ` (${props.historyItemCount ?? 0} items)`
@@ -1649,8 +1649,8 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
                         safePolygonTargets: () =>
                           props.isHistoryDropdownOpen
                             ? getSafePolygonTargets(
-                                "[data-react-grab-history-dropdown]",
-                                "[data-react-grab-toolbar-copy-all]",
+                                "[data-owl-grab-history-dropdown]",
+                                "[data-owl-grab-toolbar-copy-all]",
                               )
                             : null,
                       },
@@ -1660,7 +1660,7 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
                       <IconClock size={14} class={historyIconClass()} />
                       <Show when={props.hasUnreadHistoryItems}>
                         <span
-                          data-react-grab-unread-indicator
+                          data-owl-grab-unread-indicator
                           class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[#404040]"
                         />
                       </Show>
@@ -1688,8 +1688,8 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
                   class={cn("relative overflow-visible", minDimensionClass())}
                 >
                   <button
-                    data-react-grab-ignore-events
-                    data-react-grab-toolbar-copy-all
+                    data-owl-grab-ignore-events
+                    data-owl-grab-toolbar-copy-all
                     aria-label="Copy all history items"
                     class={cn(
                       "contain-layout flex items-center justify-center cursor-pointer interactive-scale touch-hitbox",
@@ -1712,8 +1712,8 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
                       safePolygonTargets: () =>
                         props.isHistoryDropdownOpen
                           ? getSafePolygonTargets(
-                              "[data-react-grab-history-dropdown]",
-                              "[data-react-grab-toolbar-history]",
+                              "[data-owl-grab-history-dropdown]",
+                              "[data-owl-grab-toolbar-history]",
                             )
                           : null,
                     })}
@@ -1745,8 +1745,8 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
                   class={cn("relative overflow-visible", minDimensionClass())}
                 >
                   <button
-                    data-react-grab-ignore-events
-                    data-react-grab-toolbar-menu
+                    data-owl-grab-ignore-events
+                    data-owl-grab-toolbar-menu
                     aria-label={
                       props.isMenuOpen
                         ? "Close more actions menu"
@@ -1795,10 +1795,10 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
             </div>
             <div class="relative shrink-0 overflow-visible">
               <button
-                data-react-grab-ignore-events
-                data-react-grab-toolbar-enabled
+                data-owl-grab-ignore-events
+                data-owl-grab-toolbar-enabled
                 aria-label={
-                  props.enabled ? "Disable React Grab" : "Enable React Grab"
+                  props.enabled ? "Disable OWL Grab" : "Enable OWL Grab"
                 }
                 aria-pressed={Boolean(props.enabled)}
                 class={cn(
@@ -1839,8 +1839,8 @@ export const Toolbar: Component<ToolbarProps> = (props) => {
           </div>
         </div>
         <button
-          data-react-grab-ignore-events
-          data-react-grab-toolbar-collapse
+          data-owl-grab-ignore-events
+          data-owl-grab-toolbar-collapse
           aria-label={isCollapsed() ? "Expand toolbar" : "Collapse toolbar"}
           class="contain-layout shrink-0 flex items-center justify-center cursor-pointer interactive-scale"
           onClick={handleToggleCollapse}

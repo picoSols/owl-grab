@@ -89,7 +89,7 @@ export const ToolbarContent: Component<ToolbarContentProps> = (props) => {
 
   const defaultToggleButton = () => (
     <button
-      aria-label={props.enabled ? "Disable React Grab" : "Enable React Grab"}
+      aria-label={props.enabled ? "Disable OWL Grab" : "Enable OWL Grab"}
       aria-pressed={Boolean(props.enabled)}
       class={cn(
         "contain-layout flex items-center justify-center cursor-pointer interactive-scale outline-none",

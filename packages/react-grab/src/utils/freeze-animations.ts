@@ -32,7 +32,7 @@ let frozenWaapiAnimations: Animation[] = [];
 const ensureStylesInjected = (): void => {
   if (styleElement) return;
   styleElement = createStyleElement(
-    "data-react-grab-frozen-styles",
+    "data-owl-grab-frozen-styles",
     FROZEN_STYLES,
   );
 };
@@ -178,7 +178,7 @@ export const freezeGlobalAnimations = (): void => {
   if (globalAnimationStyleElement) return;
 
   globalAnimationStyleElement = createStyleElement(
-    "data-react-grab-global-freeze",
+    "data-owl-grab-global-freeze",
     GLOBAL_FREEZE_STYLES,
   );
   globalFrozenSvgElements = collectFrozenSvgElements(

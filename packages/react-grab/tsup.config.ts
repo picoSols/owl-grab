@@ -50,7 +50,7 @@ const DEFAULT_OPTIONS: Options = {
     ".css": "text",
   },
   minify: process.env.NODE_ENV === "production",
-  noExternal: ["clsx", "tailwind-merge", "solid-js", "bippy"],
+  noExternal: ["clsx", "tailwind-merge", "solid-js"],
   onSuccess: process.env.COPY ? "pbcopy < ./dist/index.global.js" : undefined,
   outDir: "./dist",
   sourcemap: false,
@@ -67,7 +67,7 @@ const browserBuildConfig: Options = {
     VERSION: version,
   },
   format: ["iife"],
-  globalName: "globalThis.__REACT_GRAB_MODULE__",
+  globalName: "globalThis.__OWL_GRAB_MODULE__",
   loader: {
     ".css": "text",
   },
@@ -112,9 +112,9 @@ const libraryBuildConfig: Options = {
   ],
 };
 
-const reactBuildConfig: Options = {
+const owlBuildConfig: Options = {
   banner: {
-    js: `"use client";\n${banner}`,
+    js: banner,
   },
   clean: false,
   dts: true,
@@ -134,13 +134,13 @@ const reactBuildConfig: Options = {
       },
     }),
   ],
-  external: ["react"],
+  external: [],
   format: ["cjs", "esm"],
   loader: {
     ".css": "text",
   },
   minify: false,
-  noExternal: ["bippy", "solid-js", "clsx", "tailwind-merge"],
+  noExternal: ["solid-js", "clsx", "tailwind-merge"],
   outDir: "./dist",
   platform: "neutral",
   sourcemap: false,
@@ -152,5 +152,5 @@ const reactBuildConfig: Options = {
 export default defineConfig([
   browserBuildConfig,
   libraryBuildConfig,
-  reactBuildConfig,
+  owlBuildConfig,
 ]);

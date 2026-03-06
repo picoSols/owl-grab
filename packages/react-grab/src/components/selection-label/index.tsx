@@ -361,8 +361,8 @@ export const SelectionLabel: Component<SelectionLabelProps> = (props) => {
     >
       <div
         ref={containerRef}
-        data-react-grab-ignore-events
-        data-react-grab-selection-label
+        data-owl-grab-ignore-events
+        data-owl-grab-selection-label
         class={cn(
           "fixed font-sans text-[13px] antialiased filter-[drop-shadow(0px_1px_2px_#51515140)] select-none transition-opacity duration-100 ease-out",
         )}
@@ -435,7 +435,7 @@ export const SelectionLabel: Component<SelectionLabelProps> = (props) => {
                   <div class="shrink-0 flex justify-between items-end w-full min-h-4">
                     <textarea
                       ref={inputRef}
-                      data-react-grab-ignore-events
+                      data-owl-grab-ignore-events
                       class="text-black text-[13px] leading-4 font-medium bg-transparent border-none outline-none resize-none flex-1 p-0 m-0 opacity-50 wrap-break-word overflow-y-auto"
                       style={{
                         "field-sizing": "content",
@@ -450,8 +450,8 @@ export const SelectionLabel: Component<SelectionLabelProps> = (props) => {
                     />
                     <Show when={props.onAbort}>
                       <button
-                        data-react-grab-ignore-events
-                        data-react-grab-abort
+                        data-owl-grab-ignore-events
+                        data-owl-grab-abort
                         class="contain-layout shrink-0 flex items-center justify-center size-4 rounded-full bg-black cursor-pointer ml-1 interactive-scale"
                         onPointerDown={(event) => event.stopPropagation()}
                         onClick={(event) => {
@@ -516,7 +516,7 @@ export const SelectionLabel: Component<SelectionLabelProps> = (props) => {
                     <For each={actionCycleItems()}>
                       {(item, itemIndex) => (
                         <div
-                          data-react-grab-action-cycle-item={item.label.toLowerCase()}
+                          data-owl-grab-action-cycle-item={item.label.toLowerCase()}
                           class="contain-layout flex items-center justify-between w-full px-2 py-1 transition-colors"
                           classList={{
                             "bg-black/5":
@@ -573,8 +573,8 @@ export const SelectionLabel: Component<SelectionLabelProps> = (props) => {
                 >
                   <textarea
                     ref={inputRef}
-                    data-react-grab-ignore-events
-                    data-react-grab-input
+                    data-owl-grab-ignore-events
+                    data-owl-grab-input
                     class="text-black text-[13px] leading-4 font-medium bg-transparent border-none outline-none resize-none flex-1 p-0 m-0 wrap-break-word overflow-y-auto"
                     style={{
                       "field-sizing": "content",
@@ -591,7 +591,7 @@ export const SelectionLabel: Component<SelectionLabelProps> = (props) => {
                   />
                   <Show when={props.onSubmit}>
                     <button
-                      data-react-grab-submit
+                      data-owl-grab-submit
                       class="contain-layout shrink-0 flex items-center justify-center size-4 rounded-full bg-black cursor-pointer ml-1 interactive-scale"
                       onClick={() => props.onSubmit?.()}
                     >

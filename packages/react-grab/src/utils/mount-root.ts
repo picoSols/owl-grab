@@ -1,8 +1,8 @@
 import { MOUNT_ROOT_RECHECK_DELAY_MS, Z_INDEX_HOST } from "../constants.js";
 
-const ATTRIBUTE_NAME = "data-react-grab";
+const ATTRIBUTE_NAME = "data-owl-grab";
 
-const FONT_LINK_ID = "react-grab-fonts";
+const FONT_LINK_ID = "owl-grab-fonts";
 const FONT_LINK_URL =
   "https://fonts.googleapis.com/css2?family=Geist:wght@500&display=swap";
 

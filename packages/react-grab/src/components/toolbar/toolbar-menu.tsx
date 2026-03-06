@@ -132,7 +132,7 @@ export const ToolbarMenu: Component<ToolbarMenuProps> = (props) => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (
         !props.position ||
-        isEventFromOverlay(event, "data-react-grab-ignore-events")
+        isEventFromOverlay(event, "data-owl-grab-ignore-events")
       )
         return;
       props.onDismiss();
@@ -177,8 +177,8 @@ export const ToolbarMenu: Component<ToolbarMenuProps> = (props) => {
     <Show when={shouldMount()}>
       <div
         ref={containerRef}
-        data-react-grab-ignore-events
-        data-react-grab-toolbar-menu
+        data-owl-grab-ignore-events
+        data-owl-grab-toolbar-menu
         class="fixed font-sans text-[13px] antialiased filter-[drop-shadow(0px_1px_2px_#51515140)] select-none transition-[opacity,transform] duration-100 ease-out will-change-[opacity,transform]"
         style={{
           top: `${displayPosition().top}px`,
@@ -217,8 +217,8 @@ export const ToolbarMenu: Component<ToolbarMenuProps> = (props) => {
 
                 return (
                   <button
-                    data-react-grab-ignore-events
-                    data-react-grab-menu-item={action.id}
+                    data-owl-grab-ignore-events
+                    data-owl-grab-menu-item={action.id}
                     class="relative z-1 contain-layout flex items-center justify-between w-full px-2 py-1 cursor-pointer text-left border-none bg-transparent disabled:opacity-40 disabled:cursor-default"
                     disabled={!isEnabled()}
                     onPointerDown={(event) => event.stopPropagation()}

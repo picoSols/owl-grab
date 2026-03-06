@@ -1,26 +1,26 @@
 {
-  "name": "react-grab",
-  "version": "0.1.25",
-  "description": "Select context for coding agents directly from your website",
+  "name": "owl-grab",
+  "version": "0.1.0",
+  "description": "Select context for coding agents directly from your Odoo OWL website",
   "keywords": [
     "agent",
     "context",
     "grab",
-    "react",
-    "react-grab"
+    "owl",
+    "odoo",
+    "owl-grab"
   ],
-  "homepage": "https://react-grab.com",
+  "homepage": "https://github.com/picoSols/owl-grab",
   "bugs": {
-    "url": "https://github.com/aidenybai/react-grab/issues"
+    "url": "https://github.com/picoSols/owl-grab/issues"
   },
   "license": "MIT",
   "author": {
-    "name": "Aiden Bai",
-    "email": "aiden@million.dev"
+    "name": "picoSols"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aidenybai/react-grab.git"
+    "url": "git+https://github.com/picoSols/owl-grab.git"
   },
   "bin": {
     "react-grab": "./bin/cli.js"
@@ -109,7 +109,6 @@
   "dependencies": {
     "@medv/finder": "^4.0.2",
     "@react-grab/cli": "workspace:*",
-    "bippy": "^0.5.30",
     "solid-js": "^1.9.10"
   },
   "devDependencies": {
@@ -118,7 +117,7 @@
     "@playwright/test": "^1.40.0",
     "@tailwindcss/cli": "^4.1.17",
     "@types/node": "^20.19.23",
-    "@types/react": "^19.2.11",
+
     "babel-preset-solid": "^1.9.10",
     "clsx": "^2.1.1",
     "concurrently": "^9.1.2",
@@ -129,12 +128,6 @@
     "tailwindcss": "^4.1.0",
     "tsup": "^8.2.4"
   },
-  "peerDependencies": {
-    "react": ">=17.0.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    }
-  }
+  "peerDependencies": {},
+  "peerDependenciesMeta": {}
 }

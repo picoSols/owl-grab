@@ -46,8 +46,13 @@ export type {
 import { init } from "./core/index.js";
 import type { ReactGrabAPI } from "./types.js";
 
+// Type aliases for OWL naming
+export type OwlGrabAPI = ReactGrabAPI;
+
 declare global {
   interface Window {
+    __OWL_GRAB__?: ReactGrabAPI;
+    // Keep backward compat
     __REACT_GRAB__?: ReactGrabAPI;
   }
 }
@@ -56,28 +61,31 @@ let globalApi: ReactGrabAPI | null = null;
 
 export const getGlobalApi = (): ReactGrabAPI | null => {
   if (typeof window === "undefined") return globalApi;
-  return window.__REACT_GRAB__ ?? globalApi ?? null;
+  return window.__OWL_GRAB__ ?? globalApi ?? null;
 };
 
 export const setGlobalApi = (api: ReactGrabAPI | null): void => {
   globalApi = api;
   if (typeof window !== "undefined") {
     if (api) {
-      window.__REACT_GRAB__ = api;
+      window.__OWL_GRAB__ = api;
+      window.__REACT_GRAB__ = api; // backward compat
     } else {
+      delete window.__OWL_GRAB__;
       delete window.__REACT_GRAB__;
     }
   }
 };
 
 if (typeof window !== "undefined") {
-  if (window.__REACT_GRAB__) {
-    globalApi = window.__REACT_GRAB__;
+  if (window.__OWL_GRAB__) {
+    globalApi = window.__OWL_GRAB__;
   } else {
     globalApi = init();
-    window.__REACT_GRAB__ = globalApi;
+    window.__OWL_GRAB__ = globalApi;
+    window.__REACT_GRAB__ = globalApi; // backward compat
   }
   window.dispatchEvent(
-    new CustomEvent("react-grab:init", { detail: globalApi }),
+    new CustomEvent("owl-grab:init", { detail: globalApi }),
   );
 }

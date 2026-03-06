@@ -1,299 +1,126 @@
 import {
-  isSourceFile,
-  normalizeFileName,
-  getOwnerStack,
-  formatOwnerStack,
-  hasDebugStack,
-  parseStack,
-  StackFrame,
-} from "bippy/source";
-import { isCapitalized } from "../utils/is-capitalized.js";
-import {
-  getFiberFromHostInstance,
-  isInstrumentationActive,
-  getDisplayName,
-  isCompositeFiber,
-  traverseFiber,
-  type Fiber,
-} from "bippy";
-import {
   PREVIEW_TEXT_MAX_LENGTH,
   PREVIEW_ATTR_VALUE_MAX_LENGTH,
   PREVIEW_MAX_ATTRS,
   PREVIEW_PRIORITY_ATTRS,
-  SYMBOLICATION_TIMEOUT_MS,
 } from "../constants.js";
 import { getTagName } from "../utils/get-tag-name.js";
 import { truncateString } from "../utils/truncate-string.js";
 
+// OWL 2.x component node interface (Odoo 17+)
+interface OwlNode {
+  component: OwlComponent;
+  parentTree?: OwlNode;
+  children?: OwlNode[];
+  fiber?: unknown;
+  bdom?: unknown;
+  el?: Element | null;
+}
+
+interface OwlComponent {
+  constructor: { name: string };
+  props?: Record<string, unknown>;
+  env?: Record<string, unknown>;
+  __owl__?: OwlNode;
+}
+
+export interface StackFrame {
+  functionName?: string;
+  fileName?: string;
+  lineNumber?: number;
+  columnNumber?: number;
+  isServer?: boolean;
+  isSymbolicated?: boolean;
+}
+
 const NON_COMPONENT_PREFIXES = new Set([
   "_",
   "$",
-  "motion.",
-  "styled.",
-  "chakra.",
-  "ark.",
-  "Primitive.",
-  "Slot.",
 ]);
 
-const NEXT_INTERNAL_COMPONENT_NAMES = new Set([
-  "InnerLayoutRouter",
-  "RedirectErrorBoundary",
-  "RedirectBoundary",
-  "HTTPAccessFallbackErrorBoundary",
-  "HTTPAccessFallbackBoundary",
-  "LoadingBoundary",
-  "ErrorBoundary",
-  "InnerScrollAndFocusHandler",
-  "ScrollAndFocusHandler",
-  "RenderFromTemplateContext",
-  "OuterLayoutRouter",
-  "body",
-  "html",
-  "DevRootHTTPAccessFallbackBoundary",
-  "AppDevOverlayErrorBoundary",
-  "AppDevOverlay",
-  "HotReload",
-  "Router",
-  "ErrorBoundaryHandler",
-  "AppRouter",
-  "ServerRoot",
-  "SegmentStateProvider",
-  "RootErrorBoundary",
-  "LoadableComponent",
-  "MotionDOMComponent",
+const ODOO_INTERNAL_COMPONENT_NAMES = new Set([
+  "App",
+  "Root",
+  "ErrorHandler",
+  "Transition",
+  "TransitionGroup",
+  "Portal",
+  "AsyncRoot",
+  "LazyComponent",
+  "ComponentAdapter",
+  "WidgetAdapterMixin",
 ]);
-
-const REACT_INTERNAL_COMPONENT_NAMES = new Set([
-  "Suspense",
-  "Fragment",
-  "StrictMode",
-  "Profiler",
-  "SuspenseList",
-]);
-
-let cachedIsNextProject: boolean | undefined;
-
-export const checkIsNextProject = (revalidate?: boolean): boolean => {
-  if (revalidate) {
-    cachedIsNextProject = undefined;
-  }
-  cachedIsNextProject ??=
-    typeof document !== "undefined" &&
-    Boolean(
-      document.getElementById("__NEXT_DATA__") ||
-      document.querySelector("nextjs-portal"),
-    );
-  return cachedIsNextProject;
-};
-
-const checkIsInternalComponentName = (name: string): boolean => {
-  if (NEXT_INTERNAL_COMPONENT_NAMES.has(name)) return true;
-  if (REACT_INTERNAL_COMPONENT_NAMES.has(name)) return true;
-  for (const prefix of NON_COMPONENT_PREFIXES) {
-    if (name.startsWith(prefix)) return true;
-  }
-  return false;
-};
 
 export const checkIsSourceComponentName = (name: string): boolean => {
   if (name.length <= 1) return false;
-  if (checkIsInternalComponentName(name)) return false;
-  if (!isCapitalized(name)) return false;
-  if (name.startsWith("Primitive.")) return false;
-  if (name.includes("Provider") && name.includes("Context")) return false;
+  if (ODOO_INTERNAL_COMPONENT_NAMES.has(name)) return false;
+  for (const prefix of NON_COMPONENT_PREFIXES) {
+    if (name.startsWith(prefix)) return false;
+  }
+  // OWL components are PascalCase by convention
+  if (!/^[A-Z]/.test(name)) return false;
   return true;
 };
 
-const SERVER_COMPONENT_URL_PREFIXES = ["about://React/", "rsc://React/"];
+// Check if this is an Odoo/OWL project
+let cachedIsOdooProject: boolean | undefined;
 
-const isServerComponentUrl = (url: string): boolean =>
-  SERVER_COMPONENT_URL_PREFIXES.some((prefix) => url.startsWith(prefix));
-
-const devirtualizeServerUrl = (url: string): string => {
-  for (const prefix of SERVER_COMPONENT_URL_PREFIXES) {
-    if (!url.startsWith(prefix)) continue;
-    const environmentEndIndex = url.indexOf("/", prefix.length);
-    const querySuffixIndex = url.lastIndexOf("?");
-    if (environmentEndIndex > -1 && querySuffixIndex > -1) {
-      return decodeURI(url.slice(environmentEndIndex + 1, querySuffixIndex));
-    }
+export const checkIsNextProject = (revalidate?: boolean): boolean => {
+  // Repurposed: checks if this is an Odoo project
+  if (revalidate) {
+    cachedIsOdooProject = undefined;
   }
-  return url;
+  cachedIsOdooProject ??=
+    typeof document !== "undefined" &&
+    Boolean(
+      getOwlApp() ||
+      document.querySelector("[data-owl-app]") ||
+      (window as Record<string, unknown>).__owl__
+    );
+  return cachedIsOdooProject;
 };
 
-interface NextJsOriginalFrame {
-  file: string | null;
-  line1: number | null;
-  column1: number | null;
-  ignored: boolean;
-}
-
-interface NextJsFrameResult {
-  status: string;
-  value?: { originalStackFrame: NextJsOriginalFrame | null };
-}
-
-interface NextJsRequestFrame {
-  file: string;
-  methodName: string;
-  line1: number | null;
-  column1: number | null;
-  arguments: string[];
-}
-
-const symbolicateServerFrames = async (
-  frames: StackFrame[],
-): Promise<StackFrame[]> => {
-  const serverFrameIndices: number[] = [];
-  const requestFrames: NextJsRequestFrame[] = [];
-
-  for (let frameIndex = 0; frameIndex < frames.length; frameIndex++) {
-    const frame = frames[frameIndex];
-    if (!frame.isServer || !frame.fileName) continue;
-
-    serverFrameIndices.push(frameIndex);
-    requestFrames.push({
-      file: devirtualizeServerUrl(frame.fileName),
-      methodName: frame.functionName ?? "<unknown>",
-      line1: frame.lineNumber ?? null,
-      column1: frame.columnNumber ?? null,
-      arguments: [],
-    });
+// Get the OWL app instance if available
+const getOwlApp = (): unknown | null => {
+  const w = window as Record<string, unknown>;
+  if (w.__owl_devtools__) return w.__owl_devtools__;
+  if (w.odoo && typeof w.odoo === "object") {
+    const odoo = w.odoo as Record<string, unknown>;
+    if (odoo.__WOWL_DEBUG__) return odoo.__WOWL_DEBUG__;
   }
-
-  if (requestFrames.length === 0) return frames;
-
-  const controller = new AbortController();
-  const timeout = setTimeout(
-    () => controller.abort(),
-    SYMBOLICATION_TIMEOUT_MS,
-  );
-
-  try {
-    // Next.js dev server (>=15.2) exposes a batched symbolication endpoint that resolves
-    // bundled/virtual stack frames back to original source locations via source maps.
-    //
-    // Server components produce virtual URLs like "rsc://React/Server/webpack-internal:///..."
-    // that have no real file on disk. The dev server reads the bundler's source maps
-    // (webpack or turbopack) and returns the original file path, line, and column for each frame.
-    //
-    // We POST an array of frames and get back PromiseSettledResult<OriginalStackFrameResponse>[]:
-    //
-    //   POST /__nextjs_original-stack-frames
-    //   { frames: [{ file, methodName, lineNumber, column, arguments }],
-    //     isServer: true, isEdgeServer: false, isAppDirectory: true }
-    //
-    //   Response: [{ status: "fulfilled",
-    //     value: { originalStackFrame: { file, lineNumber, column, ignored } } }]
-    //
-    // Introduced by vercel/next.js#75557 (batched POST, replaces legacy per-frame GET).
-    // Handler: packages/next/src/client/components/react-dev-overlay/server/middleware-webpack.ts
-    // Types:   packages/next/src/client/components/react-dev-overlay/server/shared.ts
-    const response = await fetch("/__nextjs_original-stack-frames", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        frames: requestFrames,
-        isServer: true,
-        isEdgeServer: false,
-        isAppDirectory: true,
-      }),
-      signal: controller.signal,
-    });
-
-    if (!response.ok) return frames;
-
-    const results = (await response.json()) as NextJsFrameResult[];
-    const resolvedFrames = [...frames];
-
-    for (let i = 0; i < serverFrameIndices.length; i++) {
-      const result = results[i];
-      if (result?.status !== "fulfilled") continue;
-
-      const resolved = result.value?.originalStackFrame;
-      if (!resolved?.file || resolved.ignored) continue;
-
-      const originalFrameIndex = serverFrameIndices[i];
-      resolvedFrames[originalFrameIndex] = {
-        ...frames[originalFrameIndex],
-        fileName: resolved.file,
-        lineNumber: resolved.line1 ?? undefined,
-        columnNumber: resolved.column1 ?? undefined,
-        isSymbolicated: true,
-      };
-    }
-
-    return resolvedFrames;
-  } catch {
-    return frames;
-  } finally {
-    clearTimeout(timeout);
-  }
+  return null;
 };
 
-const extractServerFramesFromDebugStack = (
-  rootFiber: Fiber,
-): Map<string, StackFrame> => {
-  const serverFramesByName = new Map<string, StackFrame>();
+// Get the OWL node from a DOM element
+const getOwlNodeFromElement = (element: Element): OwlNode | null => {
+  const el = element as Element & { __owl__?: OwlNode };
+  if (el.__owl__) return el.__owl__;
 
-  traverseFiber(
-    rootFiber,
-    (currentFiber) => {
-      if (!hasDebugStack(currentFiber)) return false;
-
-      const ownerStack = formatOwnerStack(currentFiber._debugStack.stack);
-      if (!ownerStack) return false;
-
-      for (const frame of parseStack(ownerStack)) {
-        if (!frame.functionName || !frame.fileName) continue;
-        if (!isServerComponentUrl(frame.fileName)) continue;
-        if (serverFramesByName.has(frame.functionName)) continue;
-
-        serverFramesByName.set(frame.functionName, {
-          ...frame,
-          isServer: true,
-        });
-      }
-      return false;
-    },
-    true,
-  );
-
-  return serverFramesByName;
-};
-
-const enrichServerFrameLocations = (
-  rootFiber: Fiber,
-  frames: StackFrame[],
-): StackFrame[] => {
-  const hasUnresolvedServerFrames = frames.some(
-    (frame) => frame.isServer && !frame.fileName && frame.functionName,
-  );
-  if (!hasUnresolvedServerFrames) return frames;
-
-  const serverFramesByName = extractServerFramesFromDebugStack(rootFiber);
-  if (serverFramesByName.size === 0) return frames;
-
-  return frames.map((frame) => {
-    if (!frame.isServer || frame.fileName || !frame.functionName) return frame;
-    const resolved = serverFramesByName.get(frame.functionName);
-    if (!resolved) return frame;
-    return {
-      ...frame,
-      fileName: resolved.fileName,
-      lineNumber: resolved.lineNumber,
-      columnNumber: resolved.columnNumber,
-    };
-  });
-};
-
-const findNearestFiberElement = (element: Element): Element => {
-  if (!isInstrumentationActive()) return element;
+  // In OWL 2.x, the component reference may be on a parent element
   let current: Element | null = element;
   while (current) {
-    if (getFiberFromHostInstance(current)) return current;
+    const owlEl = current as Element & { __owl__?: OwlNode };
+    if (owlEl.__owl__) return owlEl.__owl__;
+    current = current.parentElement;
+  }
+  return null;
+};
+
+// Check if OWL instrumentation is available
+export const isInstrumentationActive = (): boolean => {
+  if (typeof document === "undefined") return false;
+  const body = document.body;
+  if (!body) return false;
+
+  const w = window as Record<string, unknown>;
+  return Boolean(w.__owl__ || w.__owl_devtools__ || getOwlApp());
+};
+
+const findNearestOwlElement = (element: Element): Element => {
+  let current: Element | null = element;
+  while (current) {
+    const owlEl = current as Element & { __owl__?: OwlNode };
+    if (owlEl.__owl__) return current;
     current = current.parentElement;
   }
   return element;
@@ -301,30 +128,42 @@ const findNearestFiberElement = (element: Element): Element => {
 
 const stackCache = new WeakMap<Element, Promise<StackFrame[] | null>>();
 
+const buildStackFromOwlNode = (node: OwlNode): StackFrame[] => {
+  const frames: StackFrame[] = [];
+  let current: OwlNode | undefined = node;
+
+  while (current) {
+    const componentName = current.component?.constructor?.name;
+    if (componentName && checkIsSourceComponentName(componentName)) {
+      frames.push({
+        functionName: componentName,
+        // OWL doesn't expose source file info at runtime,
+        // but Odoo's module system can help identify the module
+        fileName: undefined,
+        lineNumber: undefined,
+        columnNumber: undefined,
+      });
+    }
+    current = current.parentTree;
+  }
+
+  return frames;
+};
+
 const fetchStackForElement = async (
   element: Element,
 ): Promise<StackFrame[] | null> => {
   try {
-    const fiber = getFiberFromHostInstance(element);
-    if (!fiber) return null;
-
-    const frames = await getOwnerStack(fiber);
-
-    if (checkIsNextProject()) {
-      const enrichedFrames = enrichServerFrameLocations(fiber, frames);
-      return await symbolicateServerFrames(enrichedFrames);
-    }
-
-    return frames;
+    const node = getOwlNodeFromElement(element);
+    if (!node) return null;
+    return buildStackFromOwlNode(node);
   } catch {
     return null;
   }
 };
 
 export const getStack = (element: Element): Promise<StackFrame[] | null> => {
-  if (!isInstrumentationActive()) return Promise.resolve([]);
-
-  const resolvedElement = findNearestFiberElement(element);
+  const resolvedElement = findNearestOwlElement(element);
   const cached = stackCache.get(resolvedElement);
   if (cached) return cached;
 
@@ -336,7 +175,6 @@ export const getStack = (element: Element): Promise<StackFrame[] | null> => {
 export const getNearestComponentName = async (
   element: Element,
 ): Promise<string | null> => {
-  if (!isInstrumentationActive()) return null;
   const stack = await getStack(element);
   if (!stack) return null;
 
@@ -358,9 +196,9 @@ export const resolveSourceFromStack = (
 } | null => {
   if (!stack || stack.length === 0) return null;
   for (const frame of stack) {
-    if (frame.fileName && isSourceFile(frame.fileName)) {
+    if (frame.fileName) {
       return {
-        filePath: normalizeFileName(frame.fileName),
+        filePath: frame.fileName,
         lineNumber: frame.lineNumber,
         componentName:
           frame.functionName && checkIsSourceComponentName(frame.functionName)
@@ -369,32 +207,37 @@ export const resolveSourceFromStack = (
       };
     }
   }
+  // For OWL, we may not have file paths but we still have component names
+  for (const frame of stack) {
+    if (frame.functionName && checkIsSourceComponentName(frame.functionName)) {
+      return {
+        filePath: `(OWL component: ${frame.functionName})`,
+        lineNumber: undefined,
+        componentName: frame.functionName,
+      };
+    }
+  }
   return null;
 };
 
 const isUsefulComponentName = (name: string): boolean => {
   if (!name) return false;
-  if (checkIsInternalComponentName(name)) return false;
-  if (name.startsWith("Primitive.")) return false;
-  if (name === "SlotClone" || name === "Slot") return false;
+  if (ODOO_INTERNAL_COMPONENT_NAMES.has(name)) return false;
   return true;
 };
 
 export const getComponentDisplayName = (element: Element): string | null => {
-  if (!isInstrumentationActive()) return null;
-  const resolvedElement = findNearestFiberElement(element);
-  const fiber = getFiberFromHostInstance(resolvedElement);
-  if (!fiber) return null;
+  const resolvedElement = findNearestOwlElement(element);
+  const node = getOwlNodeFromElement(resolvedElement);
+  if (!node) return null;
 
-  let currentFiber = fiber.return;
-  while (currentFiber) {
-    if (isCompositeFiber(currentFiber)) {
-      const name = getDisplayName(currentFiber.type);
-      if (name && isUsefulComponentName(name)) {
-        return name;
-      }
+  let currentNode: OwlNode | undefined = node;
+  while (currentNode) {
+    const name = currentNode.component?.constructor?.name;
+    if (name && isUsefulComponentName(name)) {
+      return name;
     }
-    currentFiber = currentFiber.return;
+    currentNode = currentNode.parentTree;
   }
 
   return null;
@@ -404,37 +247,24 @@ interface StackContextOptions {
   maxLines?: number;
 }
 
-const hasSourceFiles = (stack: StackFrame[] | null): boolean => {
-  if (!stack) return false;
-  return stack.some(
-    (frame) =>
-      frame.isServer || (frame.fileName && isSourceFile(frame.fileName)),
-  );
-};
-
-const getComponentNamesFromFiber = (
+const getComponentNamesFromOwlNode = (
   element: Element,
   maxCount: number,
 ): string[] => {
-  if (!isInstrumentationActive()) return [];
-  const fiber = getFiberFromHostInstance(element);
-  if (!fiber) return [];
+  const node = getOwlNodeFromElement(element);
+  if (!node) return [];
 
   const componentNames: string[] = [];
-  traverseFiber(
-    fiber,
-    (currentFiber) => {
-      if (componentNames.length >= maxCount) return true;
-      if (isCompositeFiber(currentFiber)) {
-        const name = getDisplayName(currentFiber.type);
-        if (name && isUsefulComponentName(name)) {
-          componentNames.push(name);
-        }
-      }
-      return false;
-    },
-    true,
-  );
+  let currentNode: OwlNode | undefined = node;
+
+  while (currentNode && componentNames.length < maxCount) {
+    const name = currentNode.component?.constructor?.name;
+    if (name && isUsefulComponentName(name)) {
+      componentNames.push(name);
+    }
+    currentNode = currentNode.parentTree;
+  }
+
   return componentNames;
 };
 
@@ -443,45 +273,20 @@ export const formatStackContext = (
   options: StackContextOptions = {},
 ): string => {
   const { maxLines = 3 } = options;
-  const isNextProject = checkIsNextProject();
   const stackContext: string[] = [];
 
   for (const frame of stack) {
     if (stackContext.length >= maxLines) break;
 
-    const hasResolvedSource = frame.fileName && isSourceFile(frame.fileName);
-
-    if (
-      frame.isServer &&
-      !hasResolvedSource &&
-      (!frame.functionName || checkIsSourceComponentName(frame.functionName))
-    ) {
-      stackContext.push(
-        `\n  in ${frame.functionName || "<anonymous>"} (at Server)`,
-      );
-      continue;
-    }
-
-    if (hasResolvedSource) {
-      let line = "\n  in ";
-      const hasComponentName =
-        frame.functionName && checkIsSourceComponentName(frame.functionName);
-
-      if (hasComponentName) {
-        line += `${frame.functionName} (at `;
-      }
-
-      line += normalizeFileName(frame.fileName!);
-
-      // HACK: bundlers like vite mess up the line/column numbers, so we don't show them
-      if (isNextProject && frame.lineNumber && frame.columnNumber) {
-        line += `:${frame.lineNumber}:${frame.columnNumber}`;
-      }
-
-      if (hasComponentName) {
+    if (frame.functionName && checkIsSourceComponentName(frame.functionName)) {
+      let line = `\n  in ${frame.functionName}`;
+      if (frame.fileName) {
+        line += ` (at ${frame.fileName}`;
+        if (frame.lineNumber && frame.columnNumber) {
+          line += `:${frame.lineNumber}:${frame.columnNumber}`;
+        }
         line += `)`;
       }
-
       stackContext.push(line);
     }
   }
@@ -496,11 +301,11 @@ export const getStackContext = async (
   const maxLines = options.maxLines ?? 3;
   const stack = await getStack(element);
 
-  if (stack && hasSourceFiles(stack)) {
+  if (stack && stack.length > 0) {
     return formatStackContext(stack, options);
   }
 
-  const componentNames = getComponentNamesFromFiber(element, maxLines);
+  const componentNames = getComponentNamesFromOwlNode(element, maxLines);
   if (componentNames.length > 0) {
     return componentNames.map((name) => `\n  in ${name}`).join("");
   }
@@ -512,7 +317,7 @@ export const getElementContext = async (
   element: Element,
   options: StackContextOptions = {},
 ): Promise<string> => {
-  const resolvedElement = findNearestFiberElement(element);
+  const resolvedElement = findNearestOwlElement(element);
   const html = getHTMLPreview(resolvedElement);
   const stackContext = await getStackContext(resolvedElement, options);
 

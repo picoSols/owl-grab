@@ -45,8 +45,8 @@ export const ArrowNavigationMenu: Component<ArrowNavigationMenuProps> = (
               ref={(element) => {
                 itemRefs[itemIndex()] = element;
               }}
-              data-react-grab-ignore-events
-              data-react-grab-arrow-nav-item={item.tagName}
+              data-owl-grab-ignore-events
+              data-owl-grab-arrow-nav-item={item.tagName}
               class="relative z-1 contain-layout flex items-center w-full px-2 py-1 cursor-pointer text-left border-none bg-transparent"
               onPointerDown={(event) => event.stopPropagation()}
               onPointerEnter={(event) => {

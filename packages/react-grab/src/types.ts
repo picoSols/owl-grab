@@ -68,7 +68,7 @@ export interface Theme {
     enabled?: boolean;
   };
   /**
-   * The floating toolbar that allows toggling React Grab activation
+   * The floating toolbar that allows toggling OWL Grab activation
    */
   toolbar?: {
     /**
@@ -374,11 +374,11 @@ export interface Options {
   activationKey?: ActivationKey;
   getContent?: (elements: Element[]) => Promise<string> | string;
   /**
-   * Whether to freeze React state updates while React Grab is active.
+   * Whether to freeze OWL component updates while OWL Grab is active.
    * This prevents UI changes from interfering with element selection.
    * @default true
    */
-  freezeReactUpdates?: boolean;
+  freezeOwlUpdates?: boolean;
 }
 
 export interface SettableOptions extends Options {

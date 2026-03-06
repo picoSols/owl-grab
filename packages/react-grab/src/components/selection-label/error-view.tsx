@@ -45,7 +45,7 @@ export const ErrorView: Component<ErrorViewProps> = (props) => {
 
   return (
     <div
-      data-react-grab-error
+      data-owl-grab-error
       class="contain-layout shrink-0 flex flex-col justify-center items-end w-fit h-fit max-w-[280px]"
       onPointerDown={handleFocus}
       onClick={handleFocus}
@@ -65,7 +65,7 @@ export const ErrorView: Component<ErrorViewProps> = (props) => {
         <BottomSection>
           <div class="contain-layout shrink-0 flex items-center justify-end gap-[5px] w-full h-fit">
             <button
-              data-react-grab-retry
+              data-owl-grab-retry
               class="contain-layout shrink-0 flex items-center justify-center gap-1 px-[3px] py-px rounded-sm bg-white [border-width:0.5px] border-solid border-[#B3B3B3] cursor-pointer transition-all hover:bg-[#F5F5F5] press-scale h-[17px]"
               onClick={props.onRetry}
             >
@@ -75,7 +75,7 @@ export const ErrorView: Component<ErrorViewProps> = (props) => {
               <IconRetry size={10} class="text-black/50" />
             </button>
             <button
-              data-react-grab-error-ok
+              data-owl-grab-error-ok
               class="contain-layout shrink-0 flex items-center justify-center gap-1 px-[3px] py-px rounded-sm bg-white [border-width:0.5px] border-solid border-[#B3B3B3] cursor-pointer transition-all hover:bg-[#F5F5F5] press-scale h-[17px]"
               onClick={props.onAcknowledge}
             >

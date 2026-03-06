@@ -1,6 +1,6 @@
 const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://react-grab.com"
+    ? "https://github.com/picoSols/owl-grab"
     : "http://localhost:3000";
 
 export const buildOpenFileUrl = (
