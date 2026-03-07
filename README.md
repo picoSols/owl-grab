@@ -54,18 +54,24 @@ Paste this into any coding agent and it knows exactly which component to target.
 Paste in your browser console on any Odoo page:
 
 ```js
-const s = document.createElement("script");
-s.src = "https://raw.githubusercontent.com/picoSols/owl-grab/main/packages/react-grab/dist/index.global.js";
-document.head.appendChild(s);
+fetch("https://cdn.jsdelivr.net/gh/picoSols/owl-grab@main/packages/react-grab/dist/index.global.js")
+  .then(r => r.text())
+  .then(t => {
+    const s = document.createElement("script");
+    s.src = URL.createObjectURL(new Blob([t], { type: "text/javascript" }));
+    document.head.appendChild(s);
+  });
 ```
 
 Or save as a bookmarklet:
 
 ```
-javascript:void(document.head.appendChild(Object.assign(document.createElement('script'),{src:'https://raw.githubusercontent.com/picoSols/owl-grab/main/packages/react-grab/dist/index.global.js'})))
+javascript:void(fetch('https://cdn.jsdelivr.net/gh/picoSols/owl-grab@main/packages/react-grab/dist/index.global.js').then(r=>r.text()).then(t=>{const s=document.createElement('script');s.src=URL.createObjectURL(new Blob([t],{type:'text/javascript'}));document.head.appendChild(s)}))
 ```
 
 > Clears on page refresh.
+>
+> **Note:** These use `fetch` + Blob URL instead of loading a `<script>` from an external domain, which avoids Odoo's Content Security Policy restrictions on `script-src`. If your Odoo instance also blocks `blob:` sources, use the [Browser Extension](#browser-extension) or [Odoo Addon](#odoo-addon) instead.
 
 ### Odoo Addon
 
