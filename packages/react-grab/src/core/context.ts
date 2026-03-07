@@ -91,18 +91,72 @@ const getOwlApp = (): unknown | null => {
   return null;
 };
 
+// Get the root DOM element(s) for an OWL ComponentNode
+const getComponentRootEl = (node: OwlNode): Element | null => {
+  // node.bdom is the virtual DOM; its .el is the root DOM element
+  const bdom = node.bdom as { el?: Element; firstNode?: () => Element | null } | null;
+  if (!bdom) return null;
+  if (bdom.el instanceof Element) return bdom.el;
+  if (typeof bdom.firstNode === "function") {
+    const first = bdom.firstNode();
+    if (first instanceof Element) return first;
+  }
+  return null;
+};
+
+// Walk the OWL component tree to find the deepest component that owns a DOM element
+const findOwlNodeForElement = (
+  node: OwlNode,
+  target: Element,
+): OwlNode | null => {
+  // Check children first (depth-first) so we find the deepest match
+  const children = node.children;
+  if (children) {
+    // children can be an object (keyed) or array
+    const childNodes: OwlNode[] = Array.isArray(children)
+      ? children
+      : Object.values(children);
+    for (const child of childNodes) {
+      const found = findOwlNodeForElement(child, target);
+      if (found) return found;
+    }
+  }
+
+  // Check if this component's root element contains (or is) the target
+  const rootEl = getComponentRootEl(node);
+  if (rootEl && (rootEl === target || rootEl.contains(target))) {
+    return node;
+  }
+
+  return null;
+};
+
+// Get the OWL root ComponentNode from __WOWL_DEBUG__
+const getOwlRootNode = (): OwlNode | null => {
+  const w = window as Record<string, unknown>;
+  const odoo = w.odoo as Record<string, unknown> | undefined;
+  const debug = odoo?.__WOWL_DEBUG__ as { root?: OwlComponent } | undefined;
+  if (debug?.root?.__owl__) return debug.root.__owl__;
+
+  // Also check __owl_devtools__
+  const devtools = w.__owl_devtools__ as { root?: OwlComponent } | undefined;
+  if (devtools?.root?.__owl__) return devtools.root.__owl__;
+
+  return null;
+};
+
 // Get the OWL node from a DOM element
 const getOwlNodeFromElement = (element: Element): OwlNode | null => {
+  // First try direct __owl__ on element (some OWL versions may add this)
   const el = element as Element & { __owl__?: OwlNode };
   if (el.__owl__) return el.__owl__;
 
-  // In OWL 2.x, the component reference may be on a parent element
-  let current: Element | null = element;
-  while (current) {
-    const owlEl = current as Element & { __owl__?: OwlNode };
-    if (owlEl.__owl__) return owlEl.__owl__;
-    current = current.parentElement;
+  // Walk the component tree from the root to find the owning component
+  const root = getOwlRootNode();
+  if (root) {
+    return findOwlNodeForElement(root, element);
   }
+
   return null;
 };
 
@@ -117,12 +171,21 @@ export const isInstrumentationActive = (): boolean => {
 };
 
 const findNearestOwlElement = (element: Element): Element => {
+  // First check direct __owl__ on elements (fast path)
   let current: Element | null = element;
   while (current) {
     const owlEl = current as Element & { __owl__?: OwlNode };
     if (owlEl.__owl__) return current;
     current = current.parentElement;
   }
+
+  // For OWL 2.x: find via component tree — the component's root element
+  const node = getOwlNodeFromElement(element);
+  if (node) {
+    const rootEl = getComponentRootEl(node);
+    if (rootEl) return rootEl;
+  }
+
   return element;
 };
 

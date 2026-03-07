@@ -4,7 +4,7 @@
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DIST="$SCRIPT_DIR/../packages/react-grab/dist/index.global.js"
-DEST="$SCRIPT_DIR/owl_grab/static/src/js/owl_grab.js"
+DEST="$SCRIPT_DIR/owl_grab/static/lib/owl_grab.js"
 
 if [ ! -f "$DIST" ]; then
   echo "Bundle not found. Run 'pnpm build' first."

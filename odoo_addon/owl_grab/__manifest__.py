@@ -18,7 +18,7 @@
     "depends": ["web"],
     "assets": {
         "web.assets_backend": [
-            ("after", "web/static/src/webclient/webclient.js", "owl_grab/static/src/js/loader.js"),
+            "owl_grab/static/lib/loader.js",
         ],
     },
     "auto_install": False,

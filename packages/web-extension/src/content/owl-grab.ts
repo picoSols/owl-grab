@@ -98,7 +98,8 @@ const initializeOwlGrab = (): Promise<ReactGrabAPI | null> => {
           resolve(delayedApi);
           return;
         }
-        resolve(null);
+        // No existing API found on localhost — create one as fallback
+        resolve(createExtensionApi());
       }, LOCALHOST_INIT_DELAY_MS);
     });
   }
