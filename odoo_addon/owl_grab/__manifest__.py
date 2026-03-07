@@ -1,6 +1,6 @@
 {
     "name": "OWL Grab",
-    "version": "17.0.1.0.0",
+    "version": "18.0.1.0.0",
     "category": "Tools",
     "summary": "Select context for coding agents directly from your Odoo UI",
     "description": """
@@ -14,7 +14,7 @@
     """,
     "author": "picoSols",
     "website": "https://github.com/picoSols/owl-grab",
-    "license": "MIT",
+    "license": "LGPL-3",
     "depends": ["web"],
     "assets": {
         "web.assets_backend": [
