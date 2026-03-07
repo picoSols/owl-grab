@@ -213,3 +213,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup and guidelines.
 ## License
 
 MIT — based on [react-grab](https://github.com/aidenybai/react-grab) by [Aiden Bai](https://github.com/aidenybai).
+
+## Acknowledgements
+
+- [react-grab](https://github.com/aidenybai/react-grab) by [Aiden Bai](https://github.com/aidenybai) — the original project this fork is built on. The core architecture, UI overlay, plugin system, and agent integrations all come from react-grab.
+- [Prism](https://github.com/akshithambekar/prism) by [Akshith Ambekar](https://github.com/akshithambekar) — inspiration and reference for framework-agnostic component tree traversal and context extraction techniques.
