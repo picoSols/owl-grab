@@ -1,4 +1,4 @@
-const STORAGE_KEY = "react_grab_enabled";
+const STORAGE_KEY = "owl_grab_enabled";
 
 const getGlobalEnabled = async (): Promise<boolean> => {
   const result = await chrome.storage.local.get(STORAGE_KEY);
@@ -14,7 +14,7 @@ const updateActionIcon = async (
   tabId: number,
   enabled: boolean,
 ): Promise<void> => {
-  const title = enabled ? "React Grab (Active)" : "React Grab (Inactive)";
+  const title = enabled ? "OWL Grab (Active)" : "OWL Grab (Inactive)";
   const badgeText = enabled ? "" : "OFF";
   const badgeColor = "#FF40E0";
 
@@ -46,7 +46,7 @@ chrome.action.onClicked.addListener(async (tab) => {
 
   try {
     await chrome.tabs.sendMessage(tab.id, {
-      type: "REACT_GRAB_TOGGLE",
+      type: "OWL_GRAB_TOGGLE",
       enabled: newEnabled,
     });
   } catch {
@@ -59,7 +59,7 @@ chrome.action.onClicked.addListener(async (tab) => {
       await updateActionIcon(otherTab.id, newEnabled);
       try {
         await chrome.tabs.sendMessage(otherTab.id, {
-          type: "REACT_GRAB_TOGGLE",
+          type: "OWL_GRAB_TOGGLE",
           enabled: newEnabled,
         });
       } catch {

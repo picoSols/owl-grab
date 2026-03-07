@@ -1,5 +1,5 @@
-import { init } from "react-grab/core";
-import type { Options, ReactGrabAPI } from "react-grab";
+import { init } from "owl-grab/core";
+import type { Options, ReactGrabAPI } from "owl-grab";
 import TurndownService from "turndown";
 import {
   LOCALHOST_INIT_DELAY_MS,
@@ -8,7 +8,7 @@ import {
 
 declare global {
   interface Window {
-    __REACT_GRAB__?: ReactGrabAPI;
+    __OWL_GRAB__?: ReactGrabAPI;
   }
 }
 
@@ -45,7 +45,7 @@ const handleToolbarStateFromApi = (toolbarState: ToolbarState | null): void => {
   }
   lastToolbarState = toolbarState;
   window.postMessage(
-    { type: "__REACT_GRAB_TOOLBAR_STATE_SAVE__", state: toolbarState },
+    { type: "__OWL_GRAB_TOOLBAR_STATE_SAVE__", state: toolbarState },
     "*",
   );
 };
@@ -73,16 +73,16 @@ const createExtensionApi = (): ReactGrabAPI => {
 
   const api = init(options);
   extensionApi = api;
-  window.__REACT_GRAB__ = api;
+  window.__OWL_GRAB__ = api;
   subscribeToStateChanges(api);
   return api;
 };
 
 const getActiveApi = (): ReactGrabAPI | null => {
-  return extensionApi ?? window.__REACT_GRAB__ ?? null;
+  return extensionApi ?? window.__OWL_GRAB__ ?? null;
 };
 
-const initializeReactGrab = (): Promise<ReactGrabAPI | null> => {
+const initializeOwlGrab = (): Promise<ReactGrabAPI | null> => {
   const activeApi = getActiveApi();
   if (activeApi) {
     extensionApi = activeApi;
@@ -107,7 +107,7 @@ const initializeReactGrab = (): Promise<ReactGrabAPI | null> => {
   return Promise.resolve(createdApi);
 };
 
-window.addEventListener("react-grab:init", (event) => {
+window.addEventListener("owl-grab:init", (event) => {
   if (!(event instanceof CustomEvent)) return;
   const pageApi = event.detail;
   if (!pageApi) return;
@@ -115,12 +115,12 @@ window.addEventListener("react-grab:init", (event) => {
     extensionApi.dispose();
   }
   extensionApi = pageApi;
-  window.__REACT_GRAB__ = pageApi;
+  window.__OWL_GRAB__ = pageApi;
   subscribeToStateChanges(pageApi);
 });
 
 const handleToggle = async (enabled: boolean): Promise<void> => {
-  await initializeReactGrab();
+  await initializeOwlGrab();
 
   const api = getActiveApi();
   if (api) {
@@ -131,7 +131,7 @@ const handleToggle = async (enabled: boolean): Promise<void> => {
 const handleToolbarStateChange = async (state: ToolbarState): Promise<void> => {
   if (isApplyingExternalState) return;
 
-  await initializeReactGrab();
+  await initializeOwlGrab();
   const api = getActiveApi();
   if (api) {
     isApplyingExternalState = true;
@@ -141,11 +141,11 @@ const handleToolbarStateChange = async (state: ToolbarState): Promise<void> => {
 };
 
 window.addEventListener("message", (event: MessageEvent) => {
-  if (event.data?.type === "__REACT_GRAB_EXTENSION_TOGGLE__") {
+  if (event.data?.type === "__OWL_GRAB_EXTENSION_TOGGLE__") {
     void handleToggle(event.data.enabled);
   }
 
-  if (event.data?.type === "__REACT_GRAB_TOOLBAR_STATE_CHANGE__") {
+  if (event.data?.type === "__OWL_GRAB_TOOLBAR_STATE_CHANGE__") {
     void handleToolbarStateChange(event.data.state);
   }
 });
@@ -162,7 +162,7 @@ const queryInitialState = (): Promise<InitialState> => {
     }, STATE_QUERY_TIMEOUT_MS);
 
     const handler = (event: MessageEvent) => {
-      if (event.data?.type === "__REACT_GRAB_STATE_RESPONSE__") {
+      if (event.data?.type === "__OWL_GRAB_STATE_RESPONSE__") {
         clearTimeout(timeout);
         window.removeEventListener("message", handler);
         resolve({
@@ -173,13 +173,13 @@ const queryInitialState = (): Promise<InitialState> => {
     };
 
     window.addEventListener("message", handler);
-    window.postMessage({ type: "__REACT_GRAB_QUERY_STATE__" }, "*");
+    window.postMessage({ type: "__OWL_GRAB_QUERY_STATE__" }, "*");
   });
 };
 
 const startup = async (): Promise<void> => {
   const initialState = await queryInitialState();
-  const api = await initializeReactGrab();
+  const api = await initializeOwlGrab();
 
   if (api) {
     if (initialState.toolbarState) {

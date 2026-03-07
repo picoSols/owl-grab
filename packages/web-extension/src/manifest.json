@@ -12,7 +12,7 @@
     "128": "assets/icons/icon-128.png"
   },
   "action": {
-    "default_title": "React Grab (Active)",
+    "default_title": "OWL Grab (Active)",
     "default_icon": {
       "16": "assets/icons/icon-16.png",
       "32": "assets/icons/icon-32.png",
@@ -32,7 +32,7 @@
     },
     {
       "matches": ["<all_urls>"],
-      "js": ["src/content/react-grab.ts"],
+      "js": ["src/content/owl-grab.ts"],
       "run_at": "document_start",
       "world": "MAIN"
     }

@@ -1,19 +1,19 @@
 // This script runs in ISOLATED world and bridges chrome.runtime messages to MAIN world
 
 chrome.storage.onChanged.addListener((changes) => {
-  if (changes.react_grab_enabled) {
-    const newEnabled = changes.react_grab_enabled.newValue ?? true;
+  if (changes.owl_grab_enabled) {
+    const newEnabled = changes.owl_grab_enabled.newValue ?? true;
     window.postMessage(
-      { type: "__REACT_GRAB_EXTENSION_TOGGLE__", enabled: newEnabled },
+      { type: "__OWL_GRAB_EXTENSION_TOGGLE__", enabled: newEnabled },
       "*",
     );
   }
 
-  if (changes.react_grab_toolbar_state) {
-    const newState = changes.react_grab_toolbar_state.newValue;
+  if (changes.owl_grab_toolbar_state) {
+    const newState = changes.owl_grab_toolbar_state.newValue;
     if (newState) {
       window.postMessage(
-        { type: "__REACT_GRAB_TOOLBAR_STATE_CHANGE__", state: newState },
+        { type: "__OWL_GRAB_TOOLBAR_STATE_CHANGE__", state: newState },
         "*",
       );
     }
@@ -21,9 +21,9 @@ chrome.storage.onChanged.addListener((changes) => {
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message.type === "REACT_GRAB_TOGGLE") {
+  if (message.type === "OWL_GRAB_TOGGLE") {
     window.postMessage(
-      { type: "__REACT_GRAB_EXTENSION_TOGGLE__", enabled: message.enabled },
+      { type: "__OWL_GRAB_EXTENSION_TOGGLE__", enabled: message.enabled },
       "*",
     );
     sendResponse({ success: true });
@@ -37,16 +37,16 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 });
 
 window.addEventListener("message", (event) => {
-  if (event.data?.type === "__REACT_GRAB_QUERY_STATE__") {
+  if (event.data?.type === "__OWL_GRAB_QUERY_STATE__") {
     chrome.storage.local.get(
-      ["react_grab_enabled", "react_grab_toolbar_state"],
+      ["owl_grab_enabled", "owl_grab_toolbar_state"],
       (result) => {
-        const enabled = result.react_grab_enabled ?? true;
-        const toolbarState = result.react_grab_toolbar_state ?? null;
+        const enabled = result.owl_grab_enabled ?? true;
+        const toolbarState = result.owl_grab_toolbar_state ?? null;
 
         window.postMessage(
           {
-            type: "__REACT_GRAB_STATE_RESPONSE__",
+            type: "__OWL_GRAB_STATE_RESPONSE__",
             enabled,
             toolbarState,
           },
@@ -56,7 +56,7 @@ window.addEventListener("message", (event) => {
     );
   }
 
-  if (event.data?.type === "__REACT_GRAB_TOOLBAR_STATE_SAVE__") {
-    chrome.storage.local.set({ react_grab_toolbar_state: event.data.state });
+  if (event.data?.type === "__OWL_GRAB_TOOLBAR_STATE_SAVE__") {
+    chrome.storage.local.set({ owl_grab_toolbar_state: event.data.state });
   }
 });
