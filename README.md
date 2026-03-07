@@ -12,6 +12,7 @@
   <a href="https://github.com/picoSols/owl-grab/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-18181b?style=flat&colorA=18181b" alt="MIT License" /></a>
   <a href="https://github.com/picoSols/owl-grab"><img src="https://img.shields.io/badge/odoo-17%2B%20%2F%2018-714B67?style=flat&colorA=18181b" alt="Odoo 17+ / 18" /></a>
   <a href="https://github.com/picoSols/owl-grab/stargazers"><img src="https://img.shields.io/github/stars/picoSols/owl-grab?style=flat&colorA=18181b&colorB=18181b" alt="Stars" /></a>
+  <a href="https://github.com/picoSols/owl-grab/actions/workflows/test-build.yml"><img src="https://github.com/picoSols/owl-grab/actions/workflows/test-build.yml/badge.svg" alt="Build" /></a>
 </p>
 
 <p align="center">
@@ -20,6 +21,10 @@
 
 <p align="center">
   Adapted from <a href="https://github.com/aidenybai/react-grab">react-grab</a> for <strong>Odoo OWL 2.x</strong> (Odoo 17+).
+</p>
+
+<p align="center">
+  <img src="https://github.com/picoSols/owl-grab/blob/main/.github/public/demo.gif?raw=true" alt="OWL Grab demo — inspecting Odoo CRM kanban view" width="700" />
 </p>
 
 ---
