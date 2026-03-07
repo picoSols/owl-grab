@@ -47,33 +47,24 @@ All methods are **read-only** — OWL Grab only inspects the component tree and 
 
 | Method | Persists? | Best for |
 |---|---|---|
-| [Console / Bookmarklet](#console--bookmarklet) | No | Quick one-off inspection |
+| [Console snippet](#console-snippet) | No | Quick one-off inspection |
 | [Odoo Addon](#odoo-addon) | Yes | Day-to-day development |
 | [Browser Extension](#browser-extension) | Yes | Any Odoo instance, no server access needed |
 
-### Console / Bookmarklet
+### Console Snippet
 
-Paste in your browser console on any Odoo page:
+Paste in your browser **DevTools console** (F12) on any Odoo page:
 
 ```js
 fetch("https://cdn.jsdelivr.net/gh/picoSols/owl-grab@main/packages/react-grab/dist/index.global.js")
-  .then(r => r.text())
-  .then(t => {
-    const s = document.createElement("script");
-    s.src = URL.createObjectURL(new Blob([t], { type: "text/javascript" }));
-    document.head.appendChild(s);
-  });
-```
-
-Or save as a bookmarklet:
-
-```
-javascript:void(fetch('https://cdn.jsdelivr.net/gh/picoSols/owl-grab@main/packages/react-grab/dist/index.global.js').then(r=>r.text()).then(t=>{const s=document.createElement('script');s.src=URL.createObjectURL(new Blob([t],{type:'text/javascript'}));document.head.appendChild(s)}))
+  .then(r => r.text()).then(eval);
 ```
 
 > Clears on page refresh — leaves zero footprint on your Odoo instance.
 >
-> **Note:** These use `fetch` + Blob URL instead of loading a `<script>` from an external domain, which avoids Odoo's Content Security Policy restrictions on `script-src`. If your Odoo instance also blocks `blob:` sources, use the [Browser Extension](#browser-extension) or [Odoo Addon](#odoo-addon) instead.
+> **Why `eval`?** Odoo's Content Security Policy blocks external `<script>` tags and blob URLs. Code entered directly in DevTools is exempt from CSP, including `eval` calls initiated from the console. This won't work from page-level JS — for that, use the [Browser Extension](#browser-extension) or [Odoo Addon](#odoo-addon).
+>
+> **Bookmarklets** don't work on Odoo pages due to CSP restrictions. Use the console snippet above, or install the browser extension for a one-click toggle.
 
 ### Odoo Addon
 
