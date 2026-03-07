@@ -43,6 +43,8 @@ Paste this into any coding agent and it knows exactly which component to target.
 
 ## Installation
 
+All methods are **read-only** — OWL Grab only inspects the component tree and never modifies your Odoo instance. It runs independently of Odoo, so Odoo upgrades and patches won't affect it.
+
 | Method | Persists? | Best for |
 |---|---|---|
 | [Console / Bookmarklet](#console--bookmarklet) | No | Quick one-off inspection |
@@ -69,13 +71,13 @@ Or save as a bookmarklet:
 javascript:void(fetch('https://cdn.jsdelivr.net/gh/picoSols/owl-grab@main/packages/react-grab/dist/index.global.js').then(r=>r.text()).then(t=>{const s=document.createElement('script');s.src=URL.createObjectURL(new Blob([t],{type:'text/javascript'}));document.head.appendChild(s)}))
 ```
 
-> Clears on page refresh.
+> Clears on page refresh — leaves zero footprint on your Odoo instance.
 >
 > **Note:** These use `fetch` + Blob URL instead of loading a `<script>` from an external domain, which avoids Odoo's Content Security Policy restrictions on `script-src`. If your Odoo instance also blocks `blob:` sources, use the [Browser Extension](#browser-extension) or [Odoo Addon](#odoo-addon) instead.
 
 ### Odoo Addon
 
-Installs as a native Odoo module. Only activates in debug mode (`?debug=1`).
+Installs as a standalone Odoo module. Only activates in debug mode (`?debug=1`). Does not patch or modify any core Odoo code — safe to install alongside upgrades.
 
 ```bash
 git clone https://github.com/picoSols/owl-grab.git
@@ -101,7 +103,7 @@ The addon places files in `static/lib/` instead of `static/src/` to avoid Odoo 1
 
 ### Browser Extension
 
-Works on any Odoo instance, including localhost. No server access needed.
+Works on any Odoo instance, including localhost. No server access needed. Runs entirely in the browser sandbox — nothing is installed on your Odoo server, and Odoo updates will never break it.
 
 ```bash
 pnpm install && pnpm run extension:build
