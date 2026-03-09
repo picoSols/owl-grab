@@ -19,6 +19,7 @@
     "assets": {
         "web.assets_backend": [
             "owl_grab/static/lib/loader.js",
+            "owl_grab/static/lib/owl_grab.js",
         ],
     },
     "auto_install": False,

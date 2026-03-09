@@ -12,6 +12,12 @@ if [ ! -f "$DIST" ]; then
 fi
 
 mkdir -p "$(dirname "$DEST")"
-cp "$DIST" "$DEST"
+# Wrap the bundle so it only runs when the loader has set the debug flag
+# Replace this.globalThis with window.globalThis for strict-mode compatibility
+{
+  echo '(function(){if(!window.__OWL_GRAB_ENABLED__)return;'
+  sed 's/^this\.globalThis/window.globalThis/;s/this\.globalThis/window.globalThis/g' "$DIST"
+  echo '})();'
+} > "$DEST"
 echo "Synced owl-grab bundle to addon: $DEST"
 echo "Restart Odoo to pick up changes."
