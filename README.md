@@ -91,7 +91,15 @@ Then restart Odoo, update the apps list, and install **OWL Grab**.
 
 To update: `git pull && pnpm build && cd odoo_addon && ./sync.sh` and restart.
 
-> **Docker users:** Symlinks don't work inside Docker volume mounts. Copy the `owl_grab/` folder directly into your custom-addons directory instead.
+> **Docker users:** Symlinks don't work inside Docker volume mounts. Instead, mount the addon folder directly into a directory that is already on your `addons_path` (e.g. your extra-addons volume):
+>
+> ```yaml
+> # docker-compose.yml
+> volumes:
+>   - ./owl-grab/odoo_addon/owl_grab:/mnt/extra-addons/owl_grab
+> ```
+>
+> Alternatively, copy the `owl_grab/` folder into your custom-addons directory.
 
 <details>
 <summary>How the addon works</summary>
