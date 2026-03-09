@@ -37,6 +37,7 @@ interface OptionsState {
   activationKey: ActivationKey | undefined;
   getContent: ((elements: Element[]) => Promise<string> | string) | undefined;
   freezeReactUpdates: boolean;
+  freezeOwlUpdates: boolean;
 }
 
 const DEFAULT_OPTIONS: OptionsState = {
@@ -47,6 +48,7 @@ const DEFAULT_OPTIONS: OptionsState = {
   activationKey: undefined,
   getContent: undefined,
   freezeReactUpdates: true,
+  freezeOwlUpdates: true,
 };
 
 interface PluginStoreState {

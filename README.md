@@ -48,6 +48,8 @@ Paste this into any coding agent and it knows exactly which component to target.
 
 ## Installation
 
+> **Prerequisites:** Node.js >= 18 and [pnpm](https://pnpm.io/) >= 8. Install pnpm with `npm install -g pnpm` if you don't have it.
+
 All methods are **read-only** — OWL Grab only inspects the component tree and never modifies your Odoo instance. It runs independently of Odoo, so Odoo upgrades and patches won't affect it.
 
 | Method | Persists? | Best for |

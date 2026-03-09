@@ -75,14 +75,14 @@ export const checkIsNextProject = (revalidate?: boolean): boolean => {
     Boolean(
       getOwlApp() ||
       document.querySelector("[data-owl-app]") ||
-      (window as Record<string, unknown>).__owl__
+      (window as unknown as Record<string, unknown>).__owl__
     );
   return cachedIsOdooProject;
 };
 
 // Get the OWL app instance if available
 const getOwlApp = (): unknown | null => {
-  const w = window as Record<string, unknown>;
+  const w = window as unknown as Record<string, unknown>;
   if (w.__owl_devtools__) return w.__owl_devtools__;
   if (w.odoo && typeof w.odoo === "object") {
     const odoo = w.odoo as Record<string, unknown>;
@@ -133,7 +133,7 @@ const findOwlNodeForElement = (
 
 // Get the OWL root ComponentNode from __WOWL_DEBUG__
 const getOwlRootNode = (): OwlNode | null => {
-  const w = window as Record<string, unknown>;
+  const w = window as unknown as Record<string, unknown>;
   const odoo = w.odoo as Record<string, unknown> | undefined;
   const debug = odoo?.__WOWL_DEBUG__ as { root?: OwlComponent } | undefined;
   if (debug?.root?.__owl__) return debug.root.__owl__;
@@ -166,7 +166,7 @@ export const isInstrumentationActive = (): boolean => {
   const body = document.body;
   if (!body) return false;
 
-  const w = window as Record<string, unknown>;
+  const w = window as unknown as Record<string, unknown>;
   return Boolean(w.__owl__ || w.__owl_devtools__ || getOwlApp());
 };
 

@@ -1,15 +1,16 @@
 {
   "name": "grab",
-  "version": "0.1.25",
-  "description": "Select context for coding agents directly from your website",
+  "version": "0.1.0",
+  "description": "Select context for coding agents directly from your Odoo OWL website",
   "keywords": [
     "agent",
     "context",
     "grab",
-    "react",
-    "react-grab"
+    "owl",
+    "odoo",
+    "owl-grab"
   ],
-  "homepage": "https://github.com/picoSols/owl-grab#readme",
+  "homepage": "https://github.com/picoSols/owl-grab",
   "bugs": {
     "url": "https://github.com/picoSols/owl-grab/issues"
   },
